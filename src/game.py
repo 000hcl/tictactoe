@@ -1,4 +1,5 @@
 ##TEMPORARY
+from math import sqrt
 
 class Board:
     def __init__(self, n):
@@ -7,6 +8,11 @@ class Board:
         """
         self.n = n
         self.board = self.new_board(self.n)
+        #TEMPORARY:
+        if self.n == 3:
+            self.x = 3
+        else:
+            self.x = 5
 
     def new_board(self, n):
         board = [None for _ in range(n*n)]
@@ -14,7 +20,7 @@ class Board:
     
     def player_move(self):
         # Needs input verification
-        move = int(input("Your move (integer from 0-8):"))
+        move = int(input("Your move:"))
         self.board[move] = "X"
 
     def print_board(self):
@@ -38,13 +44,46 @@ class Board:
             if self.board[pos] == None:
                 self.board[pos] = "O"
                 return
-        self.end()
             
     def end(self):
-        print("GAME ENDED")
+        if self.check_winner(self.x):
+            print("WINNER")
+            exit()
+        if self.check_tie():
+            print("GAME ENDED IN TIE")
+            exit()
     
     def start_game(self):
         while True:
+            self.end()
             self.print_board()
             self.player_move()
+            self.end()
             self.ai_move()
+            self.end()
+    
+    #Winning moves:
+    # Diagonals: x indices are exactly n-1 or n+1 apart.
+    # Verticals: x indices are exactly n apart.
+    # Horizontals: x indices are exactly 1 apart and last index i+1 % n == 0.
+
+    def check_tie(self):
+        if None in self.board:
+            return False
+        return True
+
+    def check_winner(self, x):
+
+        return self.check_horizontal(x)
+
+    def check_horizontal(self,x):
+        count = 1
+        for i in range(0,self.n*self.n,self.n):
+            for j in range(1,self.n):
+                if self.board[i+j] != None:
+                    if self.board[i+j] == self.board[i+j-1]:
+                        count += 1
+                        if count == x:
+                            return True
+            count = 1
+        return False
