@@ -1,12 +1,15 @@
 ##TEMPORARY
 
 class Board:
-    #Needs to be adjustable
-    def __init__(self):
-        self.board = self.new_board()
+    def __init__(self, n):
+        """
+        n = length of one side of the board
+        """
+        self.n = n
+        self.board = self.new_board(self.n)
 
-    def new_board(self):
-        board = [None for _ in range(9)]
+    def new_board(self, n):
+        board = [None for _ in range(n*n)]
         return board
     
     def player_move(self):
@@ -18,20 +21,20 @@ class Board:
         board = self.board
         print("Board:")
         st = ""
-        for x in range(9):
+        for x in range(self.n*self.n):
             if board[x] == None:
                 st += "["+str(x)+"]"
             elif board[x] == "X":
                 st += "[X]"
             else:
                 st += "[O]"
-            if (x+1) % 3 == 0:
+            if (x+1) % self.n == 0:
                 print(st)
                 st = ""
     
     def ai_move(self):
         # WIP
-        for pos in range(9):
+        for pos in range(self.n*self.n):
             if self.board[pos] == None:
                 self.board[pos] = "O"
                 return
@@ -44,5 +47,4 @@ class Board:
         while True:
             self.print_board()
             self.player_move()
-            self.print_board()
             self.ai_move()
