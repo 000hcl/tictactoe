@@ -63,9 +63,9 @@ class Board:
             self.end()
     
     #Winning moves:
-    # Diagonals: x indices are exactly n-1 or n+1 apart.
-    # Verticals: x indices are exactly n apart.
-    # Horizontals: x indices are exactly 1 apart and last index i+1 % n == 0.
+    # Diagonals: x indices are exactly n-1 or n+1 apart. First index can't be must be from 1 to n-x (on its row).
+    # Verticals: x indices are exactly n apart. [DONE]
+    # Horizontals: x indices are exactly 1 apart and last index i+1 % n == 0 (or earlier). [DONE]
 
     def check_tie(self):
         if None in self.board:
@@ -74,16 +74,27 @@ class Board:
 
     def check_winner(self, x):
 
-        return self.check_horizontal(x)
+        return self.check_verticals(x) | self.check_horizontal(x)
+    
+    def check_verticals(self, x):
+        for i in range(self.n):
+            count = 1
+            for j in range(self.n,self.n*self.n,self.n):
+                if self.board[i+j] != None:
+                    if self.board[i+j] == self.board[i+j-self.n]:
+                        count += 1
+                        if count == x:
+                            return True
+        return False
 
     def check_horizontal(self,x):
-        count = 1
+        
         for i in range(0,self.n*self.n,self.n):
+            count = 1
             for j in range(1,self.n):
                 if self.board[i+j] != None:
                     if self.board[i+j] == self.board[i+j-1]:
                         count += 1
                         if count == x:
                             return True
-            count = 1
         return False
