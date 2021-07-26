@@ -120,6 +120,7 @@ class Board:
                 if (i+j+1) % self.n == 0:
                     break
         for i in range(self.n,self.n*(self.n-x)+1,self.n):
+            count = 1
             for j in range(0,self.n*self.n-i,self.n+1):
                 #self.board[i+j] = "X"
                 if self.board[i+j] != None:
@@ -143,6 +144,7 @@ class Board:
                     break
         
         for i in range(2*self.n-1,self.n*(self.n-x+1),self.n):
+            count = 1
             for j in range(0,self.n*self.n-i,self.n-1):
                 if self.board[i+j] != None:
                     if self.board[i+j] == self.board[i+j-(self.n-1)]:
