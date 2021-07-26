@@ -51,8 +51,8 @@ class Board:
                 return
 
     def end(self):
-        if self.check_winner(self.x):
-            print("WINNER")
+        if self.check_winner(self.x) != None:
+            print("WINNER:",self.check_winner(self.x))
             exit()
         if self.check_tie():
             print("GAME ENDED IN TIE")
@@ -67,19 +67,22 @@ class Board:
             self.ai_move()
             self.end()
 
-    #Winning moves:
-    # Diagonals: x indices are exactly n-1 or n+1 apart. First index can't be must be from 1 to n-x (on its row).
-    # Verticals: x indices are exactly n apart. [DONE]
-    # Horizontals: x indices are exactly 1 apart and last index i+1 % n == 0 (or earlier). [DONE]
-
     def check_tie(self):
         if None in self.board:
             return False
         return True
 
     def check_winner(self, x):
-        #TODO: Return which one wins?
-        return self.check_verticals(x) | self.check_horizontal(x) | self.check_diagonal_rd(x) | self.check_diagonal_ld(x)
+        wins = []
+        wins.append(self.check_verticals(x))
+        wins.append(self.check_horizontal(x))
+        wins.append(self.check_diagonal_rd(x))
+        wins.append(self.check_diagonal_ld(x))
+
+        for result in wins:
+            if result != None:
+                return result
+        return None
 
     def check_verticals(self, x):
         for i in range(self.n):
@@ -89,8 +92,8 @@ class Board:
                     if self.board[i+j] == self.board[i+j-self.n]:
                         count += 1
                         if count == x:
-                            return True
-        return False
+                            return self.board[i+j]
+        return None
 
     def check_horizontal(self,x):
         for i in range(0,self.n*self.n,self.n):
@@ -100,8 +103,8 @@ class Board:
                     if self.board[i+j] == self.board[i+j-1]:
                         count += 1
                         if count == x:
-                            return True
-        return False
+                            return self.board[i+j]
+        return None
 
     def check_diagonal_rd(self,x):
         for i in range(0,self.n-x+1):
@@ -113,7 +116,7 @@ class Board:
                         count += 1
                         if count == x:
                             #pass
-                            return True
+                            return self.board[i+j]
                 if (i+j+1) % self.n == 0:
                     break
         for i in range(self.n,self.n*(self.n-x)+1,self.n):
@@ -124,8 +127,8 @@ class Board:
                         count += 1
                         if count == x:
                             #pass
-                            return True
-        return False
+                            return self.board[i+j]
+        return None
 
     def check_diagonal_ld(self,x):
         for i in range(x-1,self.n):
@@ -135,7 +138,7 @@ class Board:
                     if self.board[i+j] == self.board[i+j-(self.n-1)]:
                         count += 1
                         if count == x:
-                            return True
+                            return self.board[i+j]
                 if (i+j) % self.n == 0:
                     break
         
@@ -145,6 +148,6 @@ class Board:
                     if self.board[i+j] == self.board[i+j-(self.n-1)]:
                         count += 1
                         if count == x:
-                            return True
+                            return self.board[i+j]
         
-        return False
+        return None
