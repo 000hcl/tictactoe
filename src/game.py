@@ -17,7 +17,7 @@ class Board:
     def new_board(self, n):
         board = [None for _ in range(n*n)]
         return board
-    
+
     def player_move(self):
         #TODO: Needs input verification
         move = int(input("Your move:"))
@@ -42,14 +42,14 @@ class Board:
             if (x+1) % self.n == 0:
                 print(st)
                 st = ""
-    
+
     def ai_move(self):
         # WIP
         for pos in range(self.n*self.n):
             if self.board[pos] == None:
                 self.board[pos] = "O"
                 return
-            
+
     def end(self):
         if self.check_winner(self.x):
             print("WINNER")
@@ -57,7 +57,7 @@ class Board:
         if self.check_tie():
             print("GAME ENDED IN TIE")
             exit()
-    
+
     def start_game(self):
         while True:
             self.end()
@@ -66,7 +66,7 @@ class Board:
             self.end()
             self.ai_move()
             self.end()
-    
+
     #Winning moves:
     # Diagonals: x indices are exactly n-1 or n+1 apart. First index can't be must be from 1 to n-x (on its row).
     # Verticals: x indices are exactly n apart. [DONE]
@@ -79,8 +79,8 @@ class Board:
 
     def check_winner(self, x):
         #TODO: Return which one wins?
-        return self.check_verticals(x) | self.check_horizontal(x) | self.check_diagonal_rd(x)
-    
+        return self.check_verticals(x) | self.check_horizontal(x) | self.check_diagonal_rd(x) | self.check_diagonal_ld(x)
+
     def check_verticals(self, x):
         for i in range(self.n):
             count = 1
@@ -102,7 +102,7 @@ class Board:
                         if count == x:
                             return True
         return False
-    
+
     def check_diagonal_rd(self,x):
         for i in range(0,self.n-x+1):
             count = 1
@@ -125,18 +125,26 @@ class Board:
                         if count == x:
                             #pass
                             return True
-
         return False
-    """
+
     def check_diagonal_ld(self,x):
-        for i in range(self.n):
+        for i in range(x-1,self.n):
             count = 1
-            for j in range(1,self.n*self.n,self.n-1):
+            for j in range(0,self.n*self.n-i,self.n-1):
                 if self.board[i+j] != None:
-                    if self.board[i+j] == self.board[i+j-1]:
+                    if self.board[i+j] == self.board[i+j-(self.n-1)]:
                         count += 1
                         if count == x:
                             return True
+                if (i+j) % self.n == 0:
+                    break
+        
+        for i in range(2*self.n-1,self.n*(self.n-x+1),self.n):
+            for j in range(0,self.n*self.n-i,self.n-1):
+                if self.board[i+j] != None:
+                    if self.board[i+j] == self.board[i+j-(self.n-1)]:
+                        count += 1
+                        if count == x:
+                            return True
+        
         return False
-
-"""
