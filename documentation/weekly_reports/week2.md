@@ -16,8 +16,8 @@ I tried out the pure minimax algorithm with a 4x4 board and it is clearly too in
 
 I've had a lot of bugs to fix, and at times I did not know if the problems came from small mistakes or from a lack of understanding of the algorithm. 
 
-27.7: The minimax algorithm prioritizes indices that are small when each move seem to give an equal outcome. So the algorithm "gives up" early, when I'd like it
- to challenge the player, even though it might lose.
+27.7: The minimax algorithm prioritizes indices that are small when each move seem to give an equal outcome. So the algorithm "gives up" early when I'd like it
+ to challenge the player even though it might lose.
 
 ## What next?
 
