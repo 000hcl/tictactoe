@@ -20,4 +20,6 @@ print(board.check_diagonal_ld(3,y))
 print(board.check_winner(3,x4))
 """
 
+#print(board.check_diagonal_rd(3,board.board))
+#board.print_board()
 board.start_game()
