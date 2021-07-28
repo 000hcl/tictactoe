@@ -7,6 +7,8 @@
 ## Weekly reports:
 [week1](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week1.md)
 
+[week2](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week2.md)
+
 ## Commands:
 1. Run to install dependencies:
 ```bash
