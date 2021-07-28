@@ -1,6 +1,6 @@
 import game
 
-##debug stuff, TEMPORARY:
+# debug stuff, TEMPORARY:
 board = game.Board(3)
 """
 x1 = [None for _ in range(9)]
@@ -20,6 +20,6 @@ print(board.check_diagonal_ld(3,y))
 print(board.check_winner(3,x4))
 """
 
-#print(board.check_diagonal_rd(3,board.board))
-#board.print_board()
+# print(board.check_diagonal_rd(3,board.board))
+# board.print_board()
 board.start_game()
