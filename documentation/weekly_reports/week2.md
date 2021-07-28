@@ -24,12 +24,22 @@ I've had a lot of bugs to fix, and at times I did not know if the problems came 
 27.7: I think I'll try to implement alpha-beta pruning first. 
 
 Hours used:
-25.7: 3 h: game board
+
+
+25.7: 
+
+3 h: game board
       
-26.7: 45 min: finishing the adjustable, "playable" game board
-      30 min: try to implement minimax
+26.7: 
+
+45 min: finishing the adjustable, "playable" game board
       
-27.7: 3 h: working? minimax algorithm
-      3 h: trying to find issues, bug fixing
+30 min: try to implement minimax
+      
+27.7:
+
+3 h: working? minimax algorithm
+      
+3 h: trying to find issues, bug fixing
 
 total: 10 h 15 min
