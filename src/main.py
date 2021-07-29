@@ -1,7 +1,6 @@
-import game
-
+import board
 # debug stuff, TEMPORARY:
-board = game.Board(3)
+board = board.Board(3)
 """
 x1 = [None for _ in range(9)]
 x1[4] = "X"

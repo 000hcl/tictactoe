@@ -1,11 +1,17 @@
-# TEMPORARY
-from math import sqrt
-
-
 class Board:
+    """
+    Represents a game board for the game tic tac toe.
+
+    Args:
+        n = length of one side of the board
+    """
+
     def __init__(self, n):
         """
-        n = length of one side of the board
+        Attributes:
+            n = length of one side of the board
+            board = The game board as a list.
+            x = the amount of symbols that are needed to get in a row to win the game.
         """
         self.n = n
         self.board = self.new_board(self.n)
@@ -16,17 +22,31 @@ class Board:
             self.x = 5
 
     def new_board(self, n):
+        """
+        Creates a new board.
+
+        Args:
+            n = the length of one side of the board.
+        Returns:
+            The created game board.
+        """
         board = [None for _ in range(n*n)]
         return board
 
     def player_move(self):
         # TODO: Needs input verification
+        """
+        Places the player's token on the board by asking for input.
+        """
         move = int(input("Your move:"))
         if move == -1:
             return
         self.board[move] = "X"
 
     def print_board(self):
+        """
+        Prints the game board.
+        """
         board = self.board
         print("Board:")
         st = ""
@@ -47,19 +67,19 @@ class Board:
                 st = ""
 
     def ai_move(self):
-        # WIP
         """
-        for pos in range(self.n*self.n):
-            if self.board[pos] == None:
-                self.board[pos] = "O"
-                return
-
+        Assesses which move is best for the AI to take and places the AI's token on the board.
         """
+        #TODO: WIP
         move = self.ai_best_move()
         self.board[move] = "O"
         print("AI moves to", move)
 
     def end(self):
+        #TODO: WIP
+        """
+        Checks if the game has ended and exits if it has.
+        """
         if self.check_winner(self.x, self.board) != None:
             print("WINNER:", self.check_winner(self.x, self.board))
             print(self.board, self.wins)
@@ -69,6 +89,9 @@ class Board:
             exit()
 
     def start_game(self):
+        """
+        Starts the game.
+        """
         while True:
             self.end()
             self.print_board()
@@ -78,11 +101,25 @@ class Board:
             self.end()
 
     def check_tie(self, board):
+        """
+        Checks if the game has ended in a tie.
+
+        Args:
+            board: Which game board to check.
+        """
         if None in board:
             return False
         return True
 
     def check_winner(self, x, board):
+        """
+        Checks if someone has won the game, returns the winner.
+
+        Returns:
+            "X": If the player has won.
+            "O": If the AI has won.
+            None: If there is no winner.
+        """
         wins = []
         wins.append(self.check_verticals(x, board))
         wins.append(self.check_horizontal(x, board))
@@ -96,6 +133,13 @@ class Board:
         return None
 
     def check_verticals(self, x, board):
+        """
+        Checks if there are x tokens of the same type (X or O) in a vertical row.
+
+        Args:
+            x: The amount of tokens that are needed in a row to win.
+            board: The game board to check.
+        """
         for i in range(self.n):
             count = 1
             for j in range(self.n, self.n*self.n, self.n):
@@ -107,6 +151,13 @@ class Board:
         return None
 
     def check_horizontal(self, x, board):
+        """
+        Checks if there are x tokens of the same type (X or O) in a horizontal row.
+
+        Args:
+            x: The amount of tokens that are needed in a row to win.
+            board: The game board to check.
+        """
         for i in range(0, self.n*self.n, self.n):
             count = 1
             for j in range(1, self.n):
@@ -118,6 +169,13 @@ class Board:
         return None
 
     def check_diagonal_rd(self, x, board):
+        """
+        Checks if there are x tokens of the same type (X or O) in a diagonal right-down row.
+
+        Args:
+            x: The amount of tokens that are needed in a row to win.
+            board: The game board to check.
+        """
         for i in range(0, self.n-x+1):
             count = 1
             for j in range(0, self.n*self.n-i-1, self.n+1):
@@ -145,6 +203,13 @@ class Board:
         return None
 
     def check_diagonal_ld(self, x, board):
+        """
+        Checks if there are x tokens of the same type (X or O) in a diagonal left-down row.
+
+        Args:
+            x: The amount of tokens that are needed in a row to win.
+            board: The game board to check.
+        """
         # seems fine??
         for i in range(x-1, self.n):
             count = 1
@@ -175,6 +240,11 @@ class Board:
         return None
 
     def ai_best_move(self):
+        """
+        Finds the best move for the AI.
+
+        Returns: The best move to make for the AI.
+        """
         best_value = -100
         best_move = -1
         for i in range(self.n*self.n):
@@ -190,6 +260,14 @@ class Board:
         return best_move
 
     def minmax(self, board, n, ai_turn):
+        """
+        Finds the value of a move.
+
+        Args:
+            board: The game board to check.
+            n: The length of one side of the board.
+            ai_turn: True if it's the AI's turn.
+        """
         if self.check_winner(self.x, board) == "O":
             return 10
         if self.check_winner(self.x, board) == "X":
