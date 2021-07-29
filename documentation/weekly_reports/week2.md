@@ -46,4 +46,8 @@ Hours used:
 
 1 h: Setting up poetry
 
-total: 11 h 15 min
+28.7:
+
+3 h: Documenting the code, making and undoing a lot of mistakes.
+
+total: 14 h 15 min
