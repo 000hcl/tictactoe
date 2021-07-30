@@ -6,22 +6,24 @@ This week I tried to implement a working, adjustable game board for tic tac toe,
 
 ## How has the project progressed?
 
-The project seems to be progressing, and all new features seem to be working.
+The project seems to be progressing, and all new features seem to be working. Currently it is a playable 3x3 game with a basic minimax algorithm. However it quits as soon the game has been won by either player or AI, or when the game ends in a tie. This will be changed later.
 
 ## What did I learn?
 
 I tried out the pure minimax algorithm with a 4x4 board and it is clearly too inefficient on its own. There is a clear wait time, even on the 3x3 board.
 
+Testing is something I've neglected to do earlier. Thanks to it I've found the cause of an issue I've had with the algorithm. It seems to work okay now.
+
 ## Problems?
 
-I've had a lot of bugs to fix, and at times I did not know if the problems came from small mistakes or from a lack of understanding of the algorithm. 
+I've had a lot of bugs to fix, and at times I did not know if the problems came from small mistakes or from a lack of understanding of the algorithm. After
+ some bug hunting I think the minimax algorithm works correctly now.
 
-27.7: The minimax algorithm prioritizes indices that are small when each move seem to give an equal outcome. So the algorithm "gives up" early when I'd like it
- to challenge the player even though it might lose.
+Structuring the project is something I'm a bit unsure of how to do. 
 
 ## What next?
 
-27.7: I think I'll try to implement alpha-beta pruning first. 
+Adding alpha-beta pruning, trying to figure out how to make it work efficiently on a large game board. 
 
 Hours used:
 
@@ -46,8 +48,12 @@ Hours used:
 
 1 h: Setting up poetry
 
-28.7:
+29.7:
 
 3 h: Documenting the code, making and undoing a lot of mistakes.
 
-total: 14 h 15 min
+30.7:
+
+4 h: Bug-hunting, tests
+
+total: 18 h 15 min
