@@ -10,6 +10,9 @@
 [week2](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week2.md)
 
 ## Commands:
+
+Note: To run these commands poetry and python (3.6 or higher) are required.
+
 1. Run to install dependencies:
 ```bash
 poetry install 
@@ -26,6 +29,9 @@ poetry run invoke test
 ```
 
 Coverage report:
+
+(poetry run invoke coverage may be needed to run beforehand?)
+
 ```bash
 poetry run invoke coverage-report
 ```
