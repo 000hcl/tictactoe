@@ -14,14 +14,14 @@ class Board:
             x = the amount of symbols that are needed to get in a row to win the game.
         """
         self.n = n
-        self.board = self.new_board(self.n)
+        self.board = self.__new_board(self.n)
         # TEMPORARY:
         if self.n < 30:
             self.x = 3
         else:
             self.x = 5
 
-    def new_board(self, n):
+    def __new_board(self, n):
         """
         Creates a new board.
 
@@ -148,6 +148,8 @@ class Board:
                         count += 1
                         if count == x:
                             return board[i+j]
+                    else:
+                        count = 1
         return None
 
     def check_horizontal(self, x, board):
@@ -166,6 +168,8 @@ class Board:
                         count += 1
                         if count == x:
                             return board[i+j]
+                    else:
+                        count = 1
         return None
 
     def check_diagonal_rd(self, x, board):
@@ -179,16 +183,19 @@ class Board:
         for i in range(0, self.n-x+1):
             count = 1
             for j in range(0, self.n*self.n-i-1, self.n+1):
-
-                #self.board[i+j] = "a"
+                #board[i+j] = "a"
+                
                 if board[i+j] != None:
                     if board[i+j] == board[i+j+(self.n+1)]:
                         count += 1
                         if count == x:
-                            # pass
-                            return self.board[i+j]
+                            #pass
+                            return board[i+j]
+                    else:
+                        count = 1
                 if (i+j+2) % self.n == 0:
                     break
+                
 
         for i in range(2*self.n+1, self.n*(self.n-x)+1, self.n):
             count = 1
@@ -198,8 +205,10 @@ class Board:
                     if board[i+j] == board[i+j-(self.n+1)]:
                         count += 1
                         if count == x:
-                            # pass
+                            #pass
                             return board[i+j]
+                    else:
+                        count = 1
         return None
 
     def check_diagonal_ld(self, x, board):
@@ -210,13 +219,12 @@ class Board:
             x: The amount of tokens that are needed in a row to win.
             board: The game board to check.
         """
-        # seems fine??
         for i in range(x-1, self.n):
             count = 1
             for j in range(0, self.n*(self.n-2), self.n-1):
                 if (i+j) % self.n == 0:
                     break
-                #self.board[i+j] = "a"
+                #board[i+j] = "a"
 
                 if board[i+j] != None:
                     if board[i+j] == board[i+j+(self.n-1)]:
@@ -224,8 +232,9 @@ class Board:
                         if count == x:
                             return board[i+j]
                             # pass
+                    else:
+                        count = 1
 
-        # check for bugs
         for i in range(3*self.n-2, self.n*(self.n-x+2), self.n):
             count = 1
             for j in range(0, self.n*self.n-i, self.n-1):
@@ -236,6 +245,8 @@ class Board:
                         if count == x:
                             return board[i+j]
                             # pass
+                    else:
+                        count = 1
 
         return None
 
