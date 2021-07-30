@@ -119,3 +119,26 @@ class TestBoard(unittest.TestCase):
 
         result = self.board.check_diagonal_ld(3, board)
         self.assertEqual(None, result)
+    
+    def test_minmax_gives_value_10_when_o_is_winning(self):
+        board = ["O","O",None,
+        "X","O",None,
+        "O","X","X"]
+
+        value = self.board.minmax(board, 3, True)
+        self.assertEqual(10, value)
+    
+    def test_minmax_gives_negative_value_when_x_is_winning(self):
+        board = ["X","O",None,
+        "X","X",None,
+        "O",None,None]
+
+        value = self.board.minmax(board, 3, True)
+        self.assertEqual(-10, value)
+    
+    def test_minmax_gives_value_0_when_a_tie_is_expected(self):
+        board = [None for _ in range(9)]
+
+        value = self.board.minmax(board, 3, True)
+        self.assertEqual(0, value)
+    
