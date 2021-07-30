@@ -1,7 +1,10 @@
 from board import Board
 
-# debug stuff, TEMPORARY:
 board = Board(3)
+
+#TEMPORARY:
+"""
+
 
 x1 = [None for _ in range(9)]
 x1[4] = "X"
@@ -24,4 +27,6 @@ y = x5
 
 #print(board.check_diagonal_rd(3,board.board))
 #board.print_board()
+"""
+
 board.start_game()
