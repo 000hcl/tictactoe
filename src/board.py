@@ -16,7 +16,7 @@ class Board:
         self.n = n
         self.board = self.__new_board(self.n)
         # TEMPORARY:
-        if self.n < 30:
+        if self.n < 5:
             self.x = 3
         else:
             self.x = 5
@@ -183,30 +183,30 @@ class Board:
         for i in range(0, self.n-x+1):
             count = 1
             for j in range(0, self.n*self.n-i-1, self.n+1):
-                #board[i+j] = "a"
+                board[i+j] = "a"
                 
                 if board[i+j] != None:
                     if board[i+j] == board[i+j+(self.n+1)]:
                         count += 1
                         if count == x:
-                            #pass
-                            return board[i+j]
+                            pass
+                            #return board[i+j]
                     else:
                         count = 1
                 if (i+j+2) % self.n == 0:
                     break
                 
 
-        for i in range(2*self.n+1, self.n*(self.n-x)+1, self.n):
+        for i in range(2*self.n+1, self.n*(self.n-x+1)+2, self.n):
             count = 1
             for j in range(0, self.n*self.n-i, self.n+1):
-                #board[i+j] = "X"
+                board[i+j] = "X"
                 if board[i+j] != None:
                     if board[i+j] == board[i+j-(self.n+1)]:
                         count += 1
                         if count == x:
-                            #pass
-                            return board[i+j]
+                            pass
+                            #return board[i+j]
                     else:
                         count = 1
         return None
@@ -224,27 +224,27 @@ class Board:
             for j in range(0, self.n*(self.n-2), self.n-1):
                 if (i+j) % self.n == 0:
                     break
-                #board[i+j] = "a"
+                board[i+j] = "a"
 
                 if board[i+j] != None:
                     if board[i+j] == board[i+j+(self.n-1)]:
                         count += 1
                         if count == x:
-                            return board[i+j]
-                            # pass
+                            #return board[i+j]
+                            pass
                     else:
                         count = 1
 
         for i in range(3*self.n-2, self.n*(self.n-x+2), self.n):
             count = 1
             for j in range(0, self.n*self.n-i, self.n-1):
-                #board[i+j] = "X"
+                board[i+j] = "X"
                 if board[i+j] != None:
                     if board[i+j] == board[i+j-(self.n-1)]:
                         count += 1
                         if count == x:
-                            return board[i+j]
-                            # pass
+                            #return board[i+j]
+                            pass
                     else:
                         count = 1
 
@@ -262,7 +262,7 @@ class Board:
             new_board = self.board.copy()
             if self.board[i] == None:
                 new_board[i] = "O"
-                new_value = self.minmax(new_board, self.n, False)
+                new_value = self.minmax(new_board, self.n, -100, 100, False)
                 # print(i,new_value)
                 if new_value > best_value:
 
@@ -270,13 +270,15 @@ class Board:
                     best_move = i
         return best_move
 
-    def minmax(self, board, n, ai_turn):
+    def minmax(self, board, n, a, b, ai_turn):
         """
         Finds the value of a move.
 
         Args:
             board: The game board to check.
             n: The length of one side of the board.
+            a: alpha used in alpha-beta pruning
+            b: beta used in alpha-beta pruning
             ai_turn: True if it's the AI's turn.
         """
         if self.check_winner(self.x, board) == "O":
@@ -293,7 +295,10 @@ class Board:
                 new_board = board.copy()
                 if new_board[i] == None:
                     new_board[i] = "O"
-                    value = max(value, self.minmax(new_board, n, False))
+                    value = max(value, self.minmax(new_board, n, a, b, False))
+                    if value >= b:
+                        break
+                    a = max(a, value)
                     # print("max",i,value)
             return value
         else:
@@ -302,6 +307,9 @@ class Board:
                 new_board = board.copy()
                 if new_board[i] == None:
                     new_board[i] = "X"
-                    value = min(value, self.minmax(new_board, n, True))
+                    value = min(value, self.minmax(new_board, n, a, b, True))
+                    if value <= a:
+                        break
+                    b = min(b, value)
                     # print("min",i,value)
             return value

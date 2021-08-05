@@ -1,6 +1,6 @@
 from board import Board
 
-board = Board(3)
+board = Board(4)
 
 #TEMPORARY:
 """
@@ -25,8 +25,10 @@ y = x5
 #print(board.check_winner(3,x4))
 
 
-#print(board.check_diagonal_rd(3,board.board))
-#board.print_board()
-"""
 
-board.start_game()
+"""
+print(board.check_diagonal_rd(3,board.board))
+#print(board.check_diagonal_ld(3,board.board))
+
+board.print_board()
+#board.start_game()
