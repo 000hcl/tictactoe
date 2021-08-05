@@ -1,10 +1,10 @@
-from backup import Board
+from board import Board
 
 board = Board(3)
 
 #TEMPORARY:
 
-
+"""
 
 x1 = [None for _ in range(9)]
 x1[4] = "X"
@@ -35,9 +35,11 @@ print(board.check_winner(3,y))
 
 #print(board.check_horizontal(3,board.board))
 #print(board.check_verticals(3,board.board))
-#print(board.check_diagonal_rd(3,board.board))
-#print(board.check_diagonal_ld(3,board.board))
+print(board.check_diagonal_rd(4,board.board))
+#print(board.check_diagonal_ld(4,board.board))
 
 #board.print_board()
-
+"""
+#print(board.check_diagonal_ld(4,board.board))
+#board.print_board()
 board.start_game()

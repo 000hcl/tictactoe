@@ -1,9 +1,6 @@
-
-
 class Board:
     """
     Represents a game board for the game tic tac toe.
-
     Args:
         n = length of one side of the board
     """
@@ -18,17 +15,16 @@ class Board:
         self.n = n
         self.board = self.__new_board(self.n)
         # TEMPORARY:
-        if self.n == 3:
-            self.x = 3
         if self.n == 4:
             self.x = 4
+        if self.n == 3:
+            self.x = 3
         else:
             self.x = 5
 
     def __new_board(self, n):
         """
         Creates a new board.
-
         Args:
             n = the length of one side of the board.
         Returns:
@@ -85,12 +81,12 @@ class Board:
         Checks if the game has ended and exits if it has.
         """
         winner = self.check_winner(self.x, self.board)
-        if winner != None:
+        if winner != 0:
             print("WINNER:", winner)
             print(self.board, self.wins)
             exit()
         if self.check_tie(self.board):
-            print("GAME ENDED IN TIE", self.board)
+            print("GAME ENDED IN TIE")
             exit()
 
     def start_game(self):
@@ -108,7 +104,6 @@ class Board:
     def check_tie(self, board):
         """
         Checks if the game has ended in a tie.
-
         Args:
             board: Which game board to check.
         """
@@ -119,7 +114,6 @@ class Board:
     def check_winner(self, x, board):
         """
         Checks if someone has won the game, returns the winner.
-
         Returns:
             "X": If the player has won.
             "O": If the AI has won.
@@ -135,13 +129,11 @@ class Board:
             if result != 0:
                 self.wins = wins
                 return result
-        print(wins)
-        return None
+        return 0
 
     def check_verticals(self, x, board):
         """
         Checks if there are x tokens of the same type (X or O) in a vertical row.
-
         Args:
             x: The amount of tokens that are needed in a row to win.
             board: The game board to check.
@@ -161,7 +153,6 @@ class Board:
     def check_horizontal(self, x, board):
         """
         Checks if there are x tokens of the same type (X or O) in a horizontal row.
-
         Args:
             x: The amount of tokens that are needed in a row to win.
             board: The game board to check.
@@ -183,7 +174,6 @@ class Board:
         #TODO: sum
         """
         Checks if there are x tokens of the same type (X or O) in a diagonal right-down row.
-
         Args:
             x: The amount of tokens that are needed in a row to win.
             board: The game board to check.
@@ -223,7 +213,6 @@ class Board:
         #TODO: sum
         """
         Checks if there are x tokens of the same type (X or O) in a diagonal left-down row.
-
         Args:
             x: The amount of tokens that are needed in a row to win.
             board: The game board to check.
@@ -262,7 +251,6 @@ class Board:
     def ai_best_move(self):
         """
         Finds the best move for the AI.
-
         Returns: The best move to make for the AI.
         """
         best_value = -100
@@ -272,7 +260,6 @@ class Board:
             if self.board[i] == 0:
                 new_board[i] = 10
                 new_value = self.minmax(new_board, self.n, -100, 100, False)
-                #new_value = self.minmax_nab(new_board, self.n, False)
                 # print(i,new_value)
                 if new_value > best_value:
 
@@ -283,7 +270,6 @@ class Board:
     def minmax(self, board, n, a, b, ai_turn):
         """
         Finds the value of a move.
-
         Args:
             board: The game board to check.
             n: The length of one side of the board.
