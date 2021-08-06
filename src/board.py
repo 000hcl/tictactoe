@@ -1,3 +1,5 @@
+import numpy as np
+
 class Board:
     """
     Represents a game board for the game tic tac toe.
