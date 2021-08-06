@@ -84,7 +84,7 @@ class Board:
         winner = self.check_winner(self.x, self.board)
         if winner != 0:
             print("WINNER:", winner)
-            print(self.board, self.wins)
+            #print(self.board, self.wins)
             exit()
         if self.check_tie(self.board):
             print("GAME ENDED IN TIE")
@@ -120,7 +120,7 @@ class Board:
             "X": If the player has won.
             "O": If the AI has won.
             None: If there is no winner.
-        """
+        
         wins = []
         wins.append(self.check_verticals(x, board))
         wins.append(self.check_horizontal(x, board))
@@ -132,6 +132,54 @@ class Board:
                 
                 return result
         return 0
+        """
+        return self.find_winner(x, board)
+
+    def find_winner(self, x, board):
+        #notes for self:
+        # horizintal: 0 - n-x
+        for i in range(self.n*self.n):
+            if i%self.n <= self.n-x:
+                horizontal = self.horizontal_check(i, x, board)
+                if horizontal == x:
+                    return 1
+                elif horizontal == x:
+                    return 10
+            if i < self.n*self.n - self.n*(x-1):
+                vertical = self.vertical_check(i, x, board)
+                if vertical == x:
+                    return 1
+                elif vertical == x:
+                    return 10
+            if (i < self.n*self.n - self.n*(x-1)) & (i%self.n <= self.n-x):
+                rd_diagonal = self.rd_diagonal_check(i, x, board)
+                if rd_diagonal == x:
+                    return 1
+                elif rd_diagonal == x:
+                    return 10
+            if (i < self.n*self.n - self.n*(x-1)) & (i % self.n >= x-1):
+                ld_diagonal = self.ld_diagonal_check(i, x, board)
+                if ld_diagonal == x:
+                    return 1
+                elif ld_diagonal == x:
+                    return 10
+        return 0
+
+    def vertical_check(self, i,x, board):
+        #Currently made for 4x4
+        return board[i] + board[i+x] + board[i+2*x] + board[i+3*x]# + board[i+4*x]
+    
+    def horizontal_check(self,i,x,board):
+        return sum(board[i:i+x])
+    
+    def rd_diagonal_check(self,i,x,board):
+        #currently made for 4x4
+        return board[i] + board[i+x+1] + board[i+2*(x+1)] + board[i+3*(x+1)]# + board[i+4*(x+1)]
+
+    def ld_diagonal_check(self,i,x,board):
+        #currently made for 4x4
+        return board[i] + board[i+x-1] + board[i+2*(x-1)] + board[i+3*(x-1)]# + board[i+4*(x-1)]
+    
 
     def check_verticals(self, x, board):
         """

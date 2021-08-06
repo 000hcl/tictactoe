@@ -16,7 +16,7 @@ print(a,c)
 
 s = [0 for _ in range(100)]
 #s = np.array([0 for _ in range(100)])
-
+"""
 for j in range(20):
     for i in range(1000000):
         
@@ -29,3 +29,14 @@ for j in range(20):
         #s[1] = 2
 
 print(1)
+"""
+
+print("start")
+
+
+for i in range(1000000):
+    for j in range(2):
+        for x in s:
+            a = 1+1
+
+print("stop")

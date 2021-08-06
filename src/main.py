@@ -23,6 +23,7 @@ y5 = [1, 10, 10, 10, 1, 10, 1, 1, 1]
 z1 = [10, 10, 10, 1, 10, 1, 1, 10, 1, 1, 10, 1, 1, 10, 1, 10]
 z2 = [1, 10, 10, 10, 10, 1, 10, 10, 10, 10, 1, 1, 1, 1, 1, 1]
 z3 = [10,1,1,1,10,1,1,0,10,0,0,0,10,1,1,1]
+z4 = [1, 10, 10, 10, 10, 1, 10, 10, 1, 10, 1, 1, 10, 1, 1, 1]
 
 #print(board.minmax(x1,3,True,""))
 y = z3
@@ -48,3 +49,10 @@ y = z3
 
 
 board.start_game()
+#board.board = z4
+#print(board.find_winner(4,board.board))
+#board.print_board()
+
+#shbrd = Board(30)
+
+#shbrd.print_board()
