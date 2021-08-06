@@ -9,6 +9,10 @@
 
 [week2](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week2.md)
 
+
+[week3](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week3.md)
+
+
 ## Commands:
 
 Note: To run these commands poetry and python (3.6 or higher) are required.
