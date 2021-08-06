@@ -1,4 +1,3 @@
-import numpy as np
 
 class Board:
     """
@@ -19,7 +18,7 @@ class Board:
         # TEMPORARY:
         if self.n == 4:
             self.x = 4
-        if self.n == 3:
+        elif self.n == 3:
             self.x = 3
         else:
             self.x = 5
@@ -89,6 +88,7 @@ class Board:
             exit()
         if self.check_tie(self.board):
             print("GAME ENDED IN TIE")
+            print(self.board)
             exit()
 
     def start_game(self):
@@ -126,10 +126,10 @@ class Board:
         wins.append(self.check_horizontal(x, board))
         wins.append(self.check_diagonal_rd(x, board))
         wins.append(self.check_diagonal_ld(x, board))
-
         for result in wins:
             if result != 0:
                 self.wins = wins
+                
                 return result
         return 0
 
@@ -162,12 +162,10 @@ class Board:
         for i in range(0, (self.n*self.n), self.n):
             for j in range(0,self.n-x+1):
                 v = i+j
-                sum = 0
-                for k in range(x):
-                    sum += board[v+k]
-                if sum == x: # or sum == x-1 and board[v] == 0 and board[v+x-1] == 0:
+                sm = sum(board[v:v+x])
+                if sm == x: # or sum == x-1 and board[v] == 0 and board[v+x-1] == 0:
                     return 1
-                if sum == x*10: # or sum == x*10-10 and board[v] == 0 and board[v+x-1] == 0:
+                if sm == x*10: # or sum == x*10-10 and board[v] == 0 and board[v+x-1] == 0:
                     return 10
 
         return 0
@@ -255,6 +253,8 @@ class Board:
         Finds the best move for the AI.
         Returns: The best move to make for the AI.
         """
+        if sum(self.board) == 0:
+            return 1
         best_value = -100
         best_move = -1
         for i in range(self.n*self.n):
