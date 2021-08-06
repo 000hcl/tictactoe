@@ -32,6 +32,7 @@ Hours used:
 
 
 5.8: 4h Converting list elements to integers, trying to find out if arrays are better or not.
+
 6.8: 4h --||-- + finding bugs, new check_winner() version
 
 total: 8h
