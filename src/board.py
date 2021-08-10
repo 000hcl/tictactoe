@@ -15,6 +15,8 @@ class Board:
         """
         self.n = n
         self.board = self.__new_board(self.n)
+        self.map = [-1 for _ in range(self.n*self.n)]
+        self.turn = 1
         # TEMPORARY:
         if self.n == 4:
             self.x = 4
@@ -72,6 +74,18 @@ class Board:
         Assesses which move is best for the AI to take and places the AI's token on the board.
         """
         #TODO: WIP
+        """
+        if sum(self.board) == 1:
+            for p in range(self.n*self.n):
+                if self.board[p] == 1:
+                    s = p
+            if s%self.n != 0:
+                move = s+1
+            else:
+                move = s-1
+        else:
+            pass
+        """
         move = self.ai_best_move()
         self.board[move] = 10
         print("AI moves to", move)
@@ -98,6 +112,7 @@ class Board:
         while True:
             self.end()
             self.print_board()
+            self.turn += 1
             self.player_move()
             self.end()
             self.ai_move()
@@ -120,7 +135,7 @@ class Board:
             "X": If the player has won.
             "O": If the AI has won.
             None: If there is no winner.
-        
+        """
         wins = []
         wins.append(self.check_verticals(x, board))
         wins.append(self.check_horizontal(x, board))
@@ -132,8 +147,8 @@ class Board:
                 
                 return result
         return 0
-        """
-        return self.find_winner(x, board)
+        
+        #return self.find_winner(x, board)
 
     def find_winner(self, x, board):
         #notes for self:
@@ -167,134 +182,25 @@ class Board:
 
     def vertical_check(self, i,x, board):
         #Currently made for 4x4
-        return board[i] + board[i+x] + board[i+2*x] + board[i+3*x]# + board[i+4*x]
+        return board[i] + board[i+x] + board[i+2*x] + board[i+3*x] + board[i+4*x]
     
     def horizontal_check(self,i,x,board):
         return sum(board[i:i+x])
     
     def rd_diagonal_check(self,i,x,board):
-        #currently made for 4x4
-        return board[i] + board[i+x+1] + board[i+2*(x+1)] + board[i+3*(x+1)]# + board[i+4*(x+1)]
+        sum = 0
+        for s in range(x):
+            sum += board[i+s*(x+1)]
+        return sum
+        #return board[i] + board[i+x+1] + board[i+2*(x+1)] + board[i+3*(x+1)] + board[i+4*(x+1)]
 
     def ld_diagonal_check(self,i,x,board):
-        #currently made for 4x4
-        return board[i] + board[i+x-1] + board[i+2*(x-1)] + board[i+3*(x-1)]# + board[i+4*(x-1)]
+        sum = 0
+        for s in range(x):
+            sum += board[i+s*(x-1)]
+        return sum
+        #return board[i] + board[i+x-1] + board[i+2*(x-1)] + board[i+3*(x-1)] + board[i+4*(x-1)]
     
-
-    def check_verticals(self, x, board):
-        """
-        Checks if there are x tokens of the same type (X or O) in a vertical row.
-        Args:
-            x: The amount of tokens that are needed in a row to win.
-            board: The game board to check.
-        """
-        for i in range(self.n):
-            for j in range(self.n-x+1):
-                v = i + (j*self.n)
-                sum = 0
-                for k in range(x):
-                    sum += board[v+(k*self.n)]
-                if sum == x: # or sum == x-1 and board[v] == 0 and board[v+x-1] == 0:
-                    return 1
-                if sum == x*10: # or sum == x*10-10 and board[v] == 0 and board[v+x-1] == 0:
-                    return 10
-        return 0
-
-    def check_horizontal(self, x, board):
-        """
-        Checks if there are x tokens of the same type (X or O) in a horizontal row.
-        Args:
-            x: The amount of tokens that are needed in a row to win.
-            board: The game board to check.
-        """
-        for i in range(0, (self.n*self.n), self.n):
-            for j in range(0,self.n-x+1):
-                v = i+j
-                sm = sum(board[v:v+x])
-                if sm == x: # or sum == x-1 and board[v] == 0 and board[v+x-1] == 0:
-                    return 1
-                if sm == x*10: # or sum == x*10-10 and board[v] == 0 and board[v+x-1] == 0:
-                    return 10
-
-        return 0
-
-    def check_diagonal_rd(self, x, board):
-        #TODO: sum
-        """
-        Checks if there are x tokens of the same type (X or O) in a diagonal right-down row.
-        Args:
-            x: The amount of tokens that are needed in a row to win.
-            board: The game board to check.
-        """
-        for i in range(0, self.n-x+1):
-            count = 1
-            for j in range(0, self.n*self.n-i-1, self.n+1):
-                #board[i+j] = "a"
-                
-                if board[i+j] != 0:
-                    if board[i+j] == board[i+j+(self.n+1)]:
-                        count += 1
-                        if count == x:
-                            #pass
-                            return board[i+j]
-                    else:
-                        count = 1
-                if (i+j+2) % self.n == 0:
-                    break
-                
-
-        for i in range(2*self.n+1, self.n*(self.n-x+1)+2, self.n):
-            count = 1
-            for j in range(0, self.n*self.n-i, self.n+1):
-                #board[i+j] = "X"
-                if board[i+j] != 0:
-                    if board[i+j] == board[i+j-(self.n+1)]:
-                        count += 1
-                        if count == x:
-                            #pass
-                            return board[i+j]
-                    else:
-                        count = 1
-        return 0
-
-    def check_diagonal_ld(self, x, board):
-        #TODO: sum
-        """
-        Checks if there are x tokens of the same type (X or O) in a diagonal left-down row.
-        Args:
-            x: The amount of tokens that are needed in a row to win.
-            board: The game board to check.
-        """
-        for i in range(x-1, self.n):
-            count = 1
-            for j in range(0, self.n*(self.n-2), self.n-1):
-                if (i+j) % self.n == 0:
-                    break
-                #board[i+j] = "a"
-
-                if board[i+j] != 0:
-                    if board[i+j] == board[i+j+(self.n-1)]:
-                        count += 1
-                        if count == x:
-                            return board[i+j]
-                            #pass
-                    else:
-                        count = 1
-
-        for i in range(3*self.n-2, self.n*(self.n-x+2), self.n):
-            count = 1
-            for j in range(0, self.n*self.n-i, self.n-1):
-                #board[i+j] = "X"
-                if board[i+j] != 0:
-                    if board[i+j] == board[i+j-(self.n-1)]:
-                        count += 1
-                        if count == x:
-                            return board[i+j]
-                            #pass
-                    else:
-                        count = 1
-
-        return 0
 
     def ai_best_move(self):
         """
@@ -306,6 +212,7 @@ class Board:
         best_value = -100
         best_move = -1
         for i in range(self.n*self.n):
+            print(i)
             new_board = self.board.copy()
             if self.board[i] == 0:
                 new_board[i] = 10
@@ -327,9 +234,12 @@ class Board:
             b: beta used in alpha-beta pruning
             ai_turn: True if it's the AI's turn.
         """
-        if self.check_winner(self.x, board) == 10:
+        row_length = self.turn
+        if row_length > self.x:
+            row_length = self.x
+        if self.check_winner(row_length, board) == 10:
             return 10
-        if self.check_winner(self.x, board) == 1:
+        if self.check_winner(row_length, board) == 1:
             return -10
         if self.check_tie(board):
             return 0
