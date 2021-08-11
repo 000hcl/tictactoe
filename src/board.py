@@ -24,6 +24,12 @@ class Board:
             self.x = 3
         else:
             self.x = 5
+    
+    def remap(self):
+        pass
+
+    def scan(self, i):
+        pass
 
     def __new_board(self, n):
         """
@@ -136,53 +142,44 @@ class Board:
             "O": If the AI has won.
             None: If there is no winner.
         """
-        wins = []
-        wins.append(self.check_verticals(x, board))
-        wins.append(self.check_horizontal(x, board))
-        wins.append(self.check_diagonal_rd(x, board))
-        wins.append(self.check_diagonal_ld(x, board))
-        for result in wins:
-            if result != 0:
-                self.wins = wins
-                
-                return result
-        return 0
+        return self.find_winner(x, board)
         
         #return self.find_winner(x, board)
 
     def find_winner(self, x, board):
-        #notes for self:
-        # horizintal: 0 - n-x
         for i in range(self.n*self.n):
             if i%self.n <= self.n-x:
                 horizontal = self.horizontal_check(i, x, board)
                 if horizontal == x:
                     return 1
-                elif horizontal == x:
+                elif horizontal == x*10:
                     return 10
             if i < self.n*self.n - self.n*(x-1):
                 vertical = self.vertical_check(i, x, board)
                 if vertical == x:
                     return 1
-                elif vertical == x:
+                elif vertical == x*10:
                     return 10
             if (i < self.n*self.n - self.n*(x-1)) & (i%self.n <= self.n-x):
                 rd_diagonal = self.rd_diagonal_check(i, x, board)
                 if rd_diagonal == x:
                     return 1
-                elif rd_diagonal == x:
+                elif rd_diagonal == x*10:
                     return 10
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n >= x-1):
                 ld_diagonal = self.ld_diagonal_check(i, x, board)
                 if ld_diagonal == x:
                     return 1
-                elif ld_diagonal == x:
+                elif ld_diagonal == x*10:
                     return 10
         return 0
 
     def vertical_check(self, i,x, board):
-        #Currently made for 4x4
-        return board[i] + board[i+x] + board[i+2*x] + board[i+3*x] + board[i+4*x]
+        sum = 0
+        for s in range(x):
+            sum += board[i+(s*x)]
+        #return board[i] + board[i+x] + board[i+2*x] + board[i+3*x] + board[i+4*x]
+        return sum
     
     def horizontal_check(self,i,x,board):
         return sum(board[i:i+x])
