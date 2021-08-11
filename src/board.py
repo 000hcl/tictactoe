@@ -15,8 +15,8 @@ class Board:
         """
         self.n = n
         self.board = self.__new_board(self.n)
-        self.map = [-1 for _ in range(self.n*self.n)]
-        self.turn = 1
+        self.map = self.__new_board(self.n)
+        self.turn = 2
         # TEMPORARY:
         if self.n == 4:
             self.x = 4
@@ -26,10 +26,47 @@ class Board:
             self.x = 5
     
     def remap(self):
-        pass
+        for i in range(self.n*(self.n-2)):
+            if ((i+1) % self.n != 0) & ((i+2) % self.n != 0):
+                scan = self.scan(i)
+                #print(i, scan, self.map)
+                #print(i, i+1, i+self.n, i+self.n+1)
+                if scan:
+                    if self.map[i] == 0:
+                        self.map[i] = 1
+                    if self.map[i+1] == 0:
+                        self.map[i+1] = 1
+                    if self.map[i+2] == 0:
+                        self.map[i+2] = 1
+                    if self.map[i+self.n] == 0:
+                        self.map[i+self.n] = 1
+                    if self.map[i+self.n*2] == 0:
+                        self.map[i+self.n*2] = 1
+                    if self.map[i+self.n+1] == 0:
+                        self.map[i+self.n+1] = 1
+                    if self.map[i+2*(self.n+1)] == 0:
+                        self.map[i+2*(self.n+1)] = 1
+                    if self.map[i+2+self.n] == 0:
+                        self.map[i+2+self.n] = 1
+                    if self.map[i+1+2*self.n] == 0:
+                        self.map[i+1+2*self.n] = 1
+        print(self.map)
+
+    def get_depth(self):
+        sum = 0
+        for x in self.map:
+            if x == 1:
+                sum += 1
+        print("depth",sum)
+        return sum
 
     def scan(self, i):
-        pass
+        #print("check",i,self.horizontal_check(i, 2, self.map),self.vertical_check(i, 2, self.map),self.rd_diagonal_check(i, 2, self.map),self.map[i])
+        if (self.horizontal_check(i, 3, self.map) >= 100) | (self.vertical_check(i, 3, self.map) >= 100) | (self.rd_diagonal_check(i, 3, self.map)>=100) | (self.rd_diagonal_check(i+1, 2, self.map)>=100) | (self.vertical_check(i+1,3,self.map)>=100) | (self.map[i] >= 100):
+            
+            return True
+        else:
+            return False
 
     def __new_board(self, n):
         """
@@ -50,6 +87,7 @@ class Board:
         move = int(input("Your move:"))
         if move == -1:
             return
+        self.map[move] = 100
         self.board[move] = 1
 
     def print_board(self):
@@ -92,8 +130,11 @@ class Board:
         else:
             pass
         """
+        print(self.map)
+        depth = self.get_depth()
         move = self.ai_best_move()
         self.board[move] = 10
+        self.map[move] = 100
         print("AI moves to", move)
 
     def end(self):
@@ -121,8 +162,10 @@ class Board:
             self.turn += 1
             self.player_move()
             self.end()
+            self.remap()
             self.ai_move()
             self.end()
+            self.remap()
 
     def check_tie(self, board):
         """
@@ -177,7 +220,7 @@ class Board:
     def vertical_check(self, i,x, board):
         sum = 0
         for s in range(x):
-            sum += board[i+(s*x)]
+            sum += board[i+(s*self.n)]
         #return board[i] + board[i+x] + board[i+2*x] + board[i+3*x] + board[i+4*x]
         return sum
     
@@ -187,14 +230,14 @@ class Board:
     def rd_diagonal_check(self,i,x,board):
         sum = 0
         for s in range(x):
-            sum += board[i+s*(x+1)]
+            sum += board[i+s*(self.n+1)]
         return sum
         #return board[i] + board[i+x+1] + board[i+2*(x+1)] + board[i+3*(x+1)] + board[i+4*(x+1)]
 
     def ld_diagonal_check(self,i,x,board):
         sum = 0
         for s in range(x):
-            sum += board[i+s*(x-1)]
+            sum += board[i+s*(self.n-1)]
         return sum
         #return board[i] + board[i+x-1] + board[i+2*(x-1)] + board[i+3*(x-1)] + board[i+4*(x-1)]
     
@@ -208,20 +251,26 @@ class Board:
             return 1
         best_value = -100
         best_move = -1
+        self.depth = self.get_depth()
         for i in range(self.n*self.n):
-            print(i)
+            #print(i)
+
             new_board = self.board.copy()
-            if self.board[i] == 0:
+            if (self.board[i] == 0) & (self.map[i] == 1):
                 new_board[i] = 10
-                new_value = self.minmax(new_board, self.n, -100, 100, False)
-                # print(i,new_value)
+                new_value = self.minmax(new_board, self.n, -100, 100, False, 1)
+                print(i,new_value)
                 if new_value > best_value:
 
                     best_value = new_value
                     best_move = i
         return best_move
-
-    def minmax(self, board, n, a, b, ai_turn):
+    def pseudo_tie(self, board):
+        for x in range(self.n*self.n):
+            if (board[x] ==0) & (self.map[x]==1):
+                return False
+        return True
+    def minmax(self, board, n, a, b, ai_turn, depth):
         """
         Finds the value of a move.
         Args:
@@ -235,10 +284,14 @@ class Board:
         if row_length > self.x:
             row_length = self.x
         if self.check_winner(row_length, board) == 10:
+            #print("10 WINNER --------------------------------------------")
             return 10
         if self.check_winner(row_length, board) == 1:
+            print(board)
             return -10
-        if self.check_tie(board):
+        if self.check_tie(board) | (self.pseudo_tie(board)):
+            #print("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
+            #print(board, depth)
             return 0
 
         if ai_turn:
@@ -246,9 +299,9 @@ class Board:
 
             for i in range(n*n):
                 new_board = board.copy()
-                if new_board[i] == 0:
+                if (new_board[i] == 0) & (self.map[i] == 1):
                     new_board[i] = 10
-                    value = max(value, self.minmax(new_board, n, a, b, False))
+                    value = max(value, self.minmax(new_board, n, a, b, False, depth + 1))
                     
                     if value >= b:
                         break
@@ -259,9 +312,9 @@ class Board:
             value = 100
             for i in range(n*n):
                 new_board = board.copy()
-                if new_board[i] == 0:
+                if (new_board[i] == 0) & (self.map[i] == 1):
                     new_board[i] = 1
-                    value = min(value, self.minmax(new_board, n, a, b, True))
+                    value = min(value, self.minmax(new_board, n, a, b, True, depth +1))
                     if value <= a:
                         break
                     b = min(b, value)
