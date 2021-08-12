@@ -1,6 +1,6 @@
 from board import Board
 
-board = Board(5)
+board = Board(10)
 
 #TEMPORARY:
 
