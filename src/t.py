@@ -1,6 +1,6 @@
 #FOR TESTING
 
-import numpy as np
+#import numpy as np
 """
 s = np.array([0,0,0])
 b = np.copy(s)
@@ -30,7 +30,7 @@ for j in range(20):
 
 print(1)
 """
-
+"""
 print("start")
 
 
@@ -40,3 +40,8 @@ for i in range(1000000):
             a = 1+1
 
 print("stop")
+"""
+a = True
+b = True
+c = False
+print(a & b & c)
