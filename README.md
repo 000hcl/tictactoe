@@ -13,6 +13,10 @@
 [week3](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week3.md)
 
 
+[week4](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week4.md)
+
+
+
 ## Commands:
 
 Note: To run these commands poetry and python (3.6 or higher) are required.
@@ -21,13 +25,13 @@ Note: To run these commands poetry and python (3.6 or higher) are required.
 ```bash
 poetry install 
 ```
-2. Runs the program:
+2. Runs the program: (running main.py wihtout poetry should be possible)
 ``` bash
 poetry run invoke start
 ```
 ---
 
-Testing:
+Testing: (CURRENTLY MOST WILL FAIL)
 ```bash
 poetry run invoke test
 ```
