@@ -6,7 +6,8 @@ This week I've tried to get the AI to work fast enough on a 30x30 grid. It is no
 
 ## How has the project progressed?
 
-I believe I'm close to finishing the game itself, however the tests are still undone and the documentation needs updating.
+I believe I'm close to finishing the game itself, however the tests are still undone and the documentation needs updating. Sometimes the AI does strange decisions
+ which I have to look into later.
 
 ## What did I learn?
 
