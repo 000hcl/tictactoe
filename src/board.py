@@ -257,7 +257,7 @@ class Board:
 
         if o_value > x_value:
             return 10
-        if x_value > 0:
+        if x_value >= 1:
             return 1
 
         return 0
@@ -333,14 +333,21 @@ class Board:
         if row_length > self.x:
             row_length = self.x
         #row_length = 5
+        winner_true = self.find_winner(5, 5, board, True)
         winner_5 = self.find_winner(row_length, row_length, board, False)
         winner_4 = self.find_winner(5, 4, board, False)
         winner_3 = self.find_winner(5, 3, board, False)
         winner_2 = self.find_winner(5, 2, board, True)
-        if (winner_5 == 10):
+
+        if (winner_true == 10):
             return 10
-        if (winner_5 == 1):
+        if (winner_true == 1):
             return -10
+
+        if (winner_5 == 10):
+            return 9
+        if (winner_5 == 1):
+            return -9
 
         if (winner_4 == 1):
             return -8
