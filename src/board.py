@@ -11,6 +11,8 @@ class Board:
         Attributes:
             n = length of one side of the board
             board = The game board as a list.
+            map = Determines which spots on the board are significant to the game.
+            turn = turn of the game.
             x = the amount of symbols that are needed to get in a row to win the game.
         """
         self.n = n
@@ -26,11 +28,12 @@ class Board:
             self.x = 5
 
     def remap(self):
+        """
+        Updates the map.
+        """
         for i in range(self.n*(self.n-1)):
             if ((i+1) % self.n != 0):
                 scan = self.scan(i)
-                #print(i, scan, self.map)
-                #print(i, i+1, i+self.n, i+self.n+1)
                 if scan:
                     if self.map[i] == 0:
                         self.map[i] = 1
@@ -42,6 +45,11 @@ class Board:
                         self.map[i+self.n+1] = 1
 
     def get_depth(self):
+        """
+        Finds the max depth of the game tree.
+
+        Returns: the depth of the tree.
+        """
         sum = 0
         for x in self.map:
             if x == 1:
@@ -50,7 +58,17 @@ class Board:
         return sum
 
     def scan(self, i):
-        #print("check",i,self.horizontal_check(i, 2, self.map),self.vertical_check(i, 2, self.map),self.rd_diagonal_check(i, 2, self.map),self.map[i])
+        """
+        Finds out if i is adjacent to a placed token on the map.
+
+        Args:
+            i = index of the top-left corner of the area to be scanned.
+
+        Returns:
+            True if the given spot is "adjacent" to a placed token.
+            False if the given spot is not "adjacent" to a placed token.
+        """
+
         if (self.horizontal_check(i, 2, self.map) >= 100) | (self.vertical_check(i, 2, self.map) >= 100) | (self.rd_diagonal_check(i, 2, self.map) >= 100) | (self.map[i] >= 100):
 
             return True
@@ -106,18 +124,6 @@ class Board:
         Assesses which move is best for the AI to take and places the AI's token on the board.
         """
         #TODO: WIP
-        """
-        if sum(self.board) == 1:
-            for p in range(self.n*self.n):
-                if self.board[p] == 1:
-                    s = p
-            if s%self.n != 0:
-                move = s+1
-            else:
-                move = s-1
-        else:
-            pass
-        """
         depth = self.get_depth()
         if sum(self.map) == 0:
             move = 404
@@ -171,8 +177,8 @@ class Board:
         """
         Checks if someone has won the game, returns the winner.
         Returns:
-            "X": If the player has won.
-            "O": If the AI has won.
+            1: If the player has won.
+            10: If the AI has won.
             None: If there is no winner.
         """
         return self.find_winner(x, x, board, True)
@@ -180,6 +186,23 @@ class Board:
         # return self.find_winner(x, board)
 
     def find_winner(self, x, value, board, real):
+        """
+        Checks if there is a "winner" on the board.
+
+        Args:
+            x = the "range"
+            value = The desired amount of matches in a range.
+                (example: x=5, value=4 means 4 tokens in a line
+                 with the length of 5 is a "win")
+            board = the board to inspect
+            real = 
+                True if a game ending win is desired
+                False if a guaranteed future win is also acceptable.
+
+        Returns:
+            1 if the player is a winner.
+            10 if the AI is a winner.
+        """
         x_value = 0
         o_value = 0
         for i in range(self.n*self.n):
@@ -263,6 +286,17 @@ class Board:
         return 0
 
     def vertical_check(self, i, x, board):
+        """
+        Finds the sum of a x length vertical line, starting at i.
+
+        Args:
+            i = Starting index
+            x = length of line
+            board = the board to inspect
+
+        Retrns: sum of the given line
+
+        """
         sum = 0
         for s in range(x):
             sum += board[i+(s*self.n)]
@@ -270,9 +304,30 @@ class Board:
         return sum
 
     def horizontal_check(self, i, x, board):
+        """
+        Finds the sum of a x length horizontal line, starting at i.
+
+        Args:
+            i = Starting index
+            x = length of line
+            board = the board to inspect
+
+        Retrns: sum of the given line
+
+        """
         return sum(board[i:i+x])
 
     def rd_diagonal_check(self, i, x, board):
+        """
+        Finds the sum of an x length right-down diagonal at i.
+
+        Args:
+            i = Starting index
+            x = length of diagonal
+            board = the board to inspect
+
+        Returns: sum of the given diagonal
+        """
         sum = 0
         for s in range(x):
             sum += board[i+s*(self.n+1)]
@@ -280,6 +335,16 @@ class Board:
         # return board[i] + board[i+x+1] + board[i+2*(x+1)] + board[i+3*(x+1)] + board[i+4*(x+1)]
 
     def ld_diagonal_check(self, i, x, board):
+        """
+        Finds the sum of an x length left-down diagonal at i.
+
+        Args:
+            i = Starting index
+            x = length of diagonal
+            board = the board to inspect
+
+        Returns: sum of the given diagonal
+        """
         sum = 0
         for s in range(x):
             sum += board[i+s*(self.n-1)]
@@ -313,12 +378,6 @@ class Board:
                     return best_move
         return best_move
 
-    def pseudo_tie(self, board):
-        for x in range(self.n*self.n):
-            if (board[x] == 0) & (self.map[x] == 1):
-                return False
-        return True
-
     def minmax(self, board, n, a, b, ai_turn, depth):
         """
         Finds the value of a move.
@@ -328,6 +387,7 @@ class Board:
             a: alpha used in alpha-beta pruning
             b: beta used in alpha-beta pruning
             ai_turn: True if it's the AI's turn.
+            depth: current depth of the game tree
         """
         row_length = self.turn
         if row_length > self.x:
