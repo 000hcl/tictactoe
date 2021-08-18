@@ -157,6 +157,7 @@ class Board:
             self.turn += 1
             self.ai_move()
             self.print_board(self.board)
+            print(self.board)
             self.end()
             self.remap()
             self.player_move()
@@ -183,7 +184,6 @@ class Board:
         """
         return self.find_winner(x, x, board, True)
 
-        # return self.find_winner(x, board)
 
     def find_winner(self, x, value, board, real):
         """
@@ -209,14 +209,14 @@ class Board:
             if i % self.n <= self.n-x:
                 horizontal = self.horizontal_check(i, x, board)
                 if horizontal == value:
-                    x_value = 1
+                    x_value += 1
                 elif horizontal == value*10:
-                    o_value = 1
+                    o_value += 1
                 if (real == False) & (i % self.n <= self.n-x-1):
                     if (horizontal == value-1) & (board[i] == 0) & (board[i+x] == 0):
-                        x_value = 1
+                        x_value += 1
                     if (horizontal == (value*10)-10) & (board[i] == 0) & (board[i+x] == 0):
-                        o_value = 1
+                        o_value += 1
                 if (real == False):
                     if horizontal == value-1:
                         x_value += 0.5
@@ -226,15 +226,15 @@ class Board:
             if i < self.n*self.n - self.n*(x-1):
                 vertical = self.vertical_check(i, x, board)
                 if vertical == value:
-                    x_value = 1
+                    x_value += 1
                 elif vertical == value*10:
-                    o_value = 1
+                    o_value += 1
 
                 if (real == False) & (i < self.n*self.n - self.n*(x)):
                     if (vertical == value-1) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
-                        x_value = 1
+                        x_value += 1
                     if (vertical == (value*10)-10) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
-                        o_value = 1
+                        o_value += 1
                 if (real == False):
                     if vertical == value-1:
                         x_value += 0.5
@@ -244,15 +244,15 @@ class Board:
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n <= self.n-x):
                 rd_diagonal = self.rd_diagonal_check(i, x, board)
                 if rd_diagonal == value:
-                    x_value = 1
+                    x_value += 1
                 elif rd_diagonal == value*10:
-                    o_value = 1
+                    o_value += 1
 
                 if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n <= self.n-x-1):
                     if (rd_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
-                        x_value = 1
+                        x_value += 1
                     if (rd_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
-                        o_value = 1
+                        o_value += 1
 
                 if (real == False):
                     if rd_diagonal == value-1:
@@ -263,15 +263,15 @@ class Board:
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n >= x-1):
                 ld_diagonal = self.ld_diagonal_check(i, x, board)
                 if ld_diagonal == value:
-                    x_value = 1
+                    x_value += 1
                 elif ld_diagonal == value*10:
-                    o_value = 1
+                    o_value += 1
 
                 if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n >= x):
-                    if (ld_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n-1)]):
-                        x_value = 1
-                    if (ld_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n-1)]):
-                        o_value = 1
+                    if (ld_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n-1)] == 0):
+                        x_value += 1
+                    if (ld_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n-1) == 0]):
+                        o_value += 1
                 if (real == False):
                     if ld_diagonal == value-1:
                         x_value += 0.5
@@ -279,6 +279,7 @@ class Board:
                         o_value += 0.5
 
         if o_value > x_value:
+            print(o_value)
             return 10
         if x_value >= 1:
             return 1
@@ -394,37 +395,45 @@ class Board:
             row_length = self.x
         #row_length = 5
         winner_true = self.find_winner(5, 5, board, True)
-        winner_5 = self.find_winner(row_length, row_length, board, False)
-        winner_4 = self.find_winner(5, 4, board, False)
-        winner_3 = self.find_winner(5, 3, board, False)
-        winner_2 = self.find_winner(5, 2, board, True)
 
-        if (winner_true == 10):
-            return 10
         if (winner_true == 1):
             return -10
+        if (winner_true == 10):
+            return 10
+        
 
-        if (winner_5 == 10):
-            return 9
+        winner_5 = self.find_winner(5, 5, board, False)
         if (winner_5 == 1):
             return -9
+        if (winner_5 == 10):
+            return 9
+        
 
-        if (winner_4 == 1):
+        winner_4 = self.find_winner(5, 4, board, False)
+
+        if (winner_4 == 1)&(depth >1):
             return -8
-        if (winner_4 == 10):
+        if (winner_4 == 10)&(depth >1):
             return 8
 
-        if (winner_3 == 1):
-            return -6
-        if (winner_3 == 10):
-            return 6
-        """
-        if (winner_2 == 1):
-            return -4
-        if (winner_2 == 10):
-            return 4
-        """
-        if self.check_tie(board) | (depth >= self.depth):
+        if (depth > 1):
+
+            winner_3 = self.find_winner(5, 3, board, False)
+
+            if (winner_3 == 1):
+                return -6
+            if (winner_3 == 10):
+                return 6
+
+            winner_2 = self.find_winner(5, 2, board, False)
+            
+            if (winner_2 == 1):
+                return -4
+            if (winner_2 == 10):
+                return 4
+            
+            #if self.check_tie(board) | (depth >= self.depth):
+            #    return 0
             return 0
 
         if ai_turn:
