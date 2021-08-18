@@ -268,6 +268,7 @@ class Board:
                     o_value += 1
 
                 if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n >= x):
+                    
                     if (ld_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n-1)] == 0):
                         x_value += 1
                     if (ld_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n-1) == 0]):
@@ -277,12 +278,12 @@ class Board:
                         x_value += 0.5
                     if ld_diagonal == value*10 - 10:
                         o_value += 0.5
-
-        if o_value > x_value:
-            print(o_value)
+        if o_value >= 1:
             return 10
         if x_value >= 1:
             return 1
+        
+        
 
         return 0
 
@@ -390,10 +391,6 @@ class Board:
             ai_turn: True if it's the AI's turn.
             depth: current depth of the game tree
         """
-        row_length = self.turn
-        if row_length > self.x:
-            row_length = self.x
-        #row_length = 5
         winner_true = self.find_winner(5, 5, board, True)
 
         if (winner_true == 1):
