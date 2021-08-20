@@ -19,6 +19,7 @@ class Board:
         self.board = self.__new_board(self.n)
         self.map = self.__new_board(self.n)
         self.turn = 1
+        self.player_starts = True
         # TEMPORARY:
         if self.n == 4:
             self.x = 4
@@ -152,6 +153,7 @@ class Board:
         """
         Starts the game.
         """
+        self.player_starts = False
         while True:
 
             self.turn += 1
@@ -163,6 +165,24 @@ class Board:
             self.player_move()
             self.end()
             self.remap()
+    
+    def start_game_alt(self):
+        """
+        Starts the game, player starts.
+        """
+        while True:
+
+            self.turn += 1
+            self.print_board(self.board)
+            self.player_move()
+            self.remap()
+            self.end()
+            self.ai_move()
+            self.remap()
+            self.end()
+            print(self.board)
+            
+            
 
     def check_tie(self, board):
         """
@@ -278,10 +298,18 @@ class Board:
                         x_value += 0.5
                     if ld_diagonal == value*10 - 10:
                         o_value += 0.5
-        if o_value >= 1:
-            return 10
-        if x_value >= 1:
-            return 1
+        
+        if self.player_starts:
+            if x_value >= 1:
+                return 1
+            if o_value >= 1:
+                return 10
+        else:
+            if o_value >= 1:
+                return 10
+            if x_value >= 1:
+                return 1
+        
         
         
 
@@ -334,7 +362,6 @@ class Board:
         for s in range(x):
             sum += board[i+s*(self.n+1)]
         return sum
-        # return board[i] + board[i+x+1] + board[i+2*(x+1)] + board[i+3*(x+1)] + board[i+4*(x+1)]
 
     def ld_diagonal_check(self, i, x, board):
         """
@@ -351,7 +378,6 @@ class Board:
         for s in range(x):
             sum += board[i+s*(self.n-1)]
         return sum
-        # return board[i] + board[i+x-1] + board[i+2*(x-1)] + board[i+3*(x-1)] + board[i+4*(x-1)]
 
     def ai_best_move(self):
         """
@@ -399,22 +425,24 @@ class Board:
             return 10
         
 
-        winner_5 = self.find_winner(5, 5, board, False)
-        if (winner_5 == 1):
-            return -9
-        if (winner_5 == 10):
-            return 9
+
+        
         
 
-        winner_4 = self.find_winner(5, 4, board, False)
-
-        if (winner_4 == 1)&(depth >1):
-            return -8
-        if (winner_4 == 10)&(depth >1):
-            return 8
-
         if (depth > 1):
+            winner_5 = self.find_winner(5, 5, board, False)
+            if (winner_5 == 1):
+                return -9
+            if (winner_5 == 10):
+                return 9
 
+            winner_4 = self.find_winner(5, 4, board, False)
+
+            if (winner_4 == 1):
+                return -8
+            if (winner_4 == 10):
+                return 8
+            
             winner_3 = self.find_winner(5, 3, board, False)
 
             if (winner_3 == 1):
@@ -422,12 +450,16 @@ class Board:
             if (winner_3 == 10):
                 return 6
 
+        
+            
+
             winner_2 = self.find_winner(5, 2, board, False)
             
             if (winner_2 == 1):
                 return -4
             if (winner_2 == 10):
                 return 4
+            
             
             #if self.check_tie(board) | (depth >= self.depth):
             #    return 0
