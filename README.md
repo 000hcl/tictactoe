@@ -18,6 +18,8 @@
 
 [week5](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week5.md)
 
+[week6](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week6.md)
+
 
 
 ## Commands:
