@@ -224,8 +224,7 @@ class Board:
                 False if a guaranteed future win is also acceptable.
 
         Returns:
-            1 if the player is a winner.
-            10 if the AI is a winner.
+            board value
         """
         x_value = 0
         o_value = 0
@@ -443,16 +442,14 @@ class Board:
                 return winner_3
 
         
-            """
+            
             
             winner_2 = self.find_winner(5, 2, board, False)
             
-            if (winner_2 == 1):
-                return -4
-            if (winner_2 == 10):
-                return 4
+            if (winner_2 != 0):
+                return winner_2
             
-            """
+            
             #if self.check_tie(board) | (depth >= self.depth):
             #    return 0
             return 0
