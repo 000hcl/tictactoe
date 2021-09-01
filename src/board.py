@@ -240,11 +240,6 @@ class Board:
                         x_value += horizontal
                     if (horizontal == (value*10)-10) & (board[i] == 0) & (board[i+x] == 0):
                         o_value += horizontal
-                if (real == False):
-                    if horizontal == value-1:
-                        x_value += value/2
-                    if horizontal == value*10 - 10:
-                        o_value += value/2
 
             if i < self.n*self.n - self.n*(x-1):
                 vertical = self.vertical_check(i, x, board)
@@ -258,11 +253,6 @@ class Board:
                         x_value += vertical
                     if (vertical == (value*10)-10) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
                         o_value += vertical
-                if (real == False):
-                    if vertical == value:
-                        x_value += value/2
-                    if vertical == value*10 - 10:
-                        o_value += value*10/2
 
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n <= self.n-x):
                 rd_diagonal = self.rd_diagonal_check(i, x, board)
@@ -277,12 +267,6 @@ class Board:
                     if (rd_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
                         o_value += rd_diagonal
 
-                if (real == False):
-                    if rd_diagonal == value-1:
-                        x_value += value/2
-                    if rd_diagonal == value*10 - 10:
-                        o_value += value*10/2
-
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n >= x-1):
                 ld_diagonal = self.ld_diagonal_check(i, x, board)
                 if ld_diagonal == value:
@@ -296,11 +280,6 @@ class Board:
                         x_value += ld_diagonal
                     if (ld_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n-1) == 0]):
                         o_value += ld_diagonal
-                if (real == False):
-                    if ld_diagonal == value-1:
-                        x_value += value/2
-                    if ld_diagonal == value*10 - 10:
-                        o_value += value*10/2
         
         
         if self.player_starts:
