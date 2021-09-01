@@ -20,13 +20,7 @@ class Board:
         self.map = self.__new_board(self.n)
         self.turn = 1
         self.player_starts = True
-        # TEMPORARY:
-        if self.n == 4:
-            self.x = 4
-        elif self.n == 3:
-            self.x = 3
-        else:
-            self.x = 5
+        self.x = 5
 
     def remap(self):
         """
@@ -146,7 +140,6 @@ class Board:
             else:
                 w = "player"
             print("WINNER:", w)
-            #print(self.board, self.wins)
             exit()
         if self.check_tie(self.board):
             print("GAME ENDED IN TIE")
@@ -229,6 +222,8 @@ class Board:
         x_value = 0
         o_value = 0
         for i in range(self.n*self.n):
+            if self.map[i] == 0:
+                continue
             if i % self.n <= self.n-x:
                 horizontal = self.horizontal_check(i, x, board)
                 if horizontal == value:
@@ -243,6 +238,7 @@ class Board:
 
             if i < self.n*self.n - self.n*(x-1):
                 vertical = self.vertical_check(i, x, board)
+                print(i,vertical)
                 if vertical == value:
                     x_value += vertical
                 elif vertical == value*10:
@@ -292,9 +288,6 @@ class Board:
                 return o_value
             if x_value >= 1:
                 return - x_value
-        
-        
-        
 
         return 0
 
@@ -310,11 +303,12 @@ class Board:
         Retrns: sum of the given line
 
         """
-        sum = 0
-        for s in range(x):
-            sum += board[i+(s*self.n)]
-        # return board[i] + board[i+x] + board[i+2*x] + board[i+3*x] + board[i+4*x]
-        return sum
+        indices = range(i,self.n*x,self.n)
+        return sum(map(board.__getitem__, indices))
+        #sum = 0
+        #for s in range(x):
+        #    sum += board[i+(s*self.n)]
+        #return sum
 
     def horizontal_check(self, i, x, board):
         """
@@ -341,6 +335,10 @@ class Board:
 
         Returns: sum of the given diagonal
         """
+
+        #indices = range(i,x*self.n,self.n+1)
+        #return sum(map(board.__getitem__, indices))
+
         sum = 0
         for s in range(x):
             sum += board[i+s*(self.n+1)]
@@ -357,7 +355,10 @@ class Board:
 
         Returns: sum of the given diagonal
         """
+        #indices = range(i,x*self.n,self.n-1)
+        #return sum(map(board.__getitem__, indices))
         sum = 0
+        
         for s in range(x):
             sum += board[i+s*(self.n-1)]
         return sum
@@ -373,18 +374,15 @@ class Board:
         best_move = -1
         self.depth = self.get_depth()
         for i in range(self.n*self.n):
-            # print(i)
-
             new_board = self.board.copy()
             if (self.board[i] == 0) & (self.map[i] == 1):
                 new_board[i] = 10
                 new_value = self.minmax(new_board, self.n, -1000, 1000, False, 1)
-                print(i, new_value)
+                #print(i, new_value)
                 if new_value > best_value:
 
                     best_value = new_value
                     best_move = i
-                #print(i, best_value)
                 if best_value == 10:
                     return best_move
         return best_move
@@ -408,7 +406,6 @@ class Board:
             winner_5 = self.find_winner(5, 5, board, False)
             if (winner_5 != 0):
                 return winner_5
-            
 
             winner_4 = self.find_winner(5, 4, board, False)
 
@@ -420,17 +417,11 @@ class Board:
             if (winner_3 != 0):
                 return winner_3
 
-        
-            
-            
             winner_2 = self.find_winner(5, 2, board, False)
             
             if (winner_2 != 0):
                 return winner_2
-            
-            
-            #if self.check_tie(board) | (depth >= self.depth):
-            #    return 0
+
             return 0
 
         if ai_turn:
