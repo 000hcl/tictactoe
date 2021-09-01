@@ -238,7 +238,6 @@ class Board:
 
             if i < self.n*self.n - self.n*(x-1):
                 vertical = self.vertical_check(i, x, board)
-                print(i,vertical)
                 if vertical == value:
                     x_value += vertical
                 elif vertical == value*10:
