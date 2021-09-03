@@ -17,4 +17,4 @@ print(board.map)
 print(board.find_winner(3,3,board.board,True))
 board.print_board(board.board)
 """
-board.start_game_alt()
+board.start_game()

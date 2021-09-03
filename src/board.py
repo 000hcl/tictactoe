@@ -150,7 +150,7 @@ class Board:
         """
         winner = self.check_winner(self.x, self.board)
         if winner != 0:
-            if winner % 10 == 0:
+            if winner > 0:
                 w = "AI"
             else:
                 w = "player"
