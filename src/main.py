@@ -9,9 +9,12 @@ board = Board(30)
 board.board[0] = 10
 board.board[30] = 10
 board.board[60] = 10
+board.board[90] = 10
 
-board.vertical_check(0,5,board.board)
-print(board.find_winner(5,3,board.board,True))
+print(board.vertical_check(0,5,board.board))
+board.remap()
+print(board.map)
+print(board.find_winner(3,3,board.board,True))
 board.print_board(board.board)
 """
 board.start_game_alt()

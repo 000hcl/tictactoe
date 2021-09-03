@@ -1,4 +1,6 @@
 
+from math import inf
+
 class Board:
     """
     Represents a game board for the game tic tac toe.
@@ -18,6 +20,8 @@ class Board:
         self.n = n
         self.board = self.__new_board(self.n)
         self.map = self.__new_board(self.n)
+        self.min_index = inf
+        self.max_index = -1
         self.turn = 1
         self.player_starts = True
         self.x = 5
@@ -91,6 +95,16 @@ class Board:
             return
         self.map[move] = 100
         self.board[move] = 1
+        self.set_max_min_indices(move)
+    
+    def set_max_min_indices(self, i):
+        """
+        Updates min_index and max_index.
+        """
+        if self.max_index < i:
+            self.max_index = i
+        if self.min_index > i:
+            self.min_index = i
 
     def print_board(self, board):
         """
@@ -126,6 +140,7 @@ class Board:
             move = self.ai_best_move()
         self.board[move] = 10
         self.map[move] = 100
+        self.set_max_min_indices(move)
         print("AI moves to", move)
 
     def end(self):
@@ -156,13 +171,13 @@ class Board:
             self.turn += 1
             self.ai_move()
             self.print_board(self.board)
-            #print(self.board)
+            # print(self.board)
             self.end()
             self.remap()
             self.player_move()
             self.end()
             self.remap()
-    
+
     def start_game_alt(self):
         """
         Starts the game, player starts.
@@ -177,9 +192,7 @@ class Board:
             self.ai_move()
             self.remap()
             self.end()
-            #print(self.board)
-            
-            
+            # print(self.board)
 
     def check_tie(self, board):
         """
@@ -201,7 +214,6 @@ class Board:
         """
         return self.find_winner(x, x, board, True)
 
-
     def find_winner(self, x, value, board, real):
         """
         Checks if there is a "winner" on the board.
@@ -222,65 +234,95 @@ class Board:
         x_value = 0
         o_value = 0
         for i in range(self.n*self.n):
-            if self.map[i] == 0:
+            if (i > self.max_index) or (i < self.min_index - x -1 - (x-1)*self.n):
                 continue
             if i % self.n <= self.n-x:
                 horizontal = self.horizontal_check(i, x, board)
-                if horizontal == value:
-                    x_value += horizontal
-                elif horizontal == value*10:
-                    o_value += horizontal
-                if (real == False) & (i % self.n <= self.n-x-1):
+                horizontal_in_row = self.horizontal_check(i, value, board)
+                if horizontal == value == horizontal_in_row:
+                    x_value += 1
+                elif horizontal == (value*10) == horizontal_in_row:
+                    o_value += 1
+                """
+                if (real == False) and (i % self.n <= self.n-x-1):
                     if (horizontal == value-1) & (board[i] == 0) & (board[i+x] == 0):
-                        x_value += horizontal
+                        x_value += 1
                     if (horizontal == (value*10)-10) & (board[i] == 0) & (board[i+x] == 0):
-                        o_value += horizontal
+                        o_value += 1
+                """
+                if not real:
+                    if horizontal == value -1:
+                        x_value += 0.5
+                    elif horizontal == (value - 1)*10:
+                        o_value += 0.5
 
             if i < self.n*self.n - self.n*(x-1):
                 vertical = self.vertical_check(i, x, board)
-                if vertical == value:
-                    x_value += vertical
-                elif vertical == value*10:
-                    o_value += vertical
-
+                vertical_in_row = self.vertical_check(i, value, board)
+                if vertical == value == vertical_in_row:
+                    x_value += 1
+                elif vertical == value*10 == vertical_in_row:
+                    o_value += 1
+                """
                 if (real == False) & (i < self.n*self.n - self.n*(x)):
                     if (vertical == value-1) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
-                        x_value += vertical
+                        x_value += 1
                     if (vertical == (value*10)-10) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
-                        o_value += vertical
+                        o_value += 1
+                """
+                if not real:
+                    if vertical == value-1:
+                        x_value += 0.5
+                    elif vertical == (value - 1)*10:
+                        o_value += 0.5
 
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n <= self.n-x):
                 rd_diagonal = self.rd_diagonal_check(i, x, board)
-                if rd_diagonal == value:
-                    x_value += rd_diagonal
-                elif rd_diagonal == value*10:
-                    o_value += rd_diagonal
-
+                rd_diagonal_in_row = self.rd_diagonal_check(i, value, board)
+                if rd_diagonal == value == rd_diagonal_in_row:
+                    x_value += 1
+                elif rd_diagonal == value*10 == rd_diagonal_in_row:
+                    o_value += 1
+                """
                 if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n <= self.n-x-1):
                     if (rd_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
-                        x_value += rd_diagonal
+                        x_value += 1
                     if (rd_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
-                        o_value += rd_diagonal
+                        o_value += 1
+                """
+
+                if not real:
+                    if rd_diagonal_in_row == value-1:
+                        x_value += 0.5
+                    elif rd_diagonal_in_row == (value-1)*10:
+                        o_value += 0.5
 
             if (i < self.n*self.n - self.n*(x-1)) & (i % self.n >= x-1):
                 ld_diagonal = self.ld_diagonal_check(i, x, board)
-                if ld_diagonal == value:
-                    x_value += ld_diagonal
-                elif ld_diagonal == value*10:
-                    o_value += ld_diagonal
-
+                ld_diagonal_in_row = self.ld_diagonal_check(i, value, board)
+                if ld_diagonal == value == ld_diagonal_in_row:
+                    x_value += 1
+                elif ld_diagonal == value*10 == ld_diagonal_in_row:
+                    o_value += 1
+                """
                 if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n >= x):
-                    
+
                     if (ld_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n-1)] == 0):
                         x_value += ld_diagonal
                     if (ld_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n-1) == 0]):
                         o_value += ld_diagonal
-        
-        
+                """
+
+                if not real:
+                    if ld_diagonal_in_row == value-1:
+                        x_value += 0.5
+                    elif ld_diagonal_in_row == (value-1)*10:
+                        o_value += 0.5
+
         if self.player_starts:
             if x_value >= o_value:
                 return - x_value
-            if o_value >= 10:
+            if o_value >= 1:
                 return o_value
         else:
             if o_value >= x_value:
@@ -302,12 +344,12 @@ class Board:
         Retrns: sum of the given line
 
         """
-        indices = range(i,self.n*x,self.n)
-        return sum(map(board.__getitem__, indices))
-        #sum = 0
-        #for s in range(x):
-        #    sum += board[i+(s*self.n)]
-        #return sum
+        #indices = range(i, self.n*x, self.n)
+        #return sum(map(board.__getitem__, indices))
+        sum = 0
+        for s in range(x):
+            sum += board[i+(s*self.n)]
+        return sum
 
     def horizontal_check(self, i, x, board):
         """
@@ -336,7 +378,7 @@ class Board:
         """
 
         #indices = range(i,x*self.n,self.n+1)
-        #return sum(map(board.__getitem__, indices))
+        # return sum(map(board.__getitem__, indices))
 
         sum = 0
         for s in range(x):
@@ -355,9 +397,9 @@ class Board:
         Returns: sum of the given diagonal
         """
         #indices = range(i,x*self.n,self.n-1)
-        #return sum(map(board.__getitem__, indices))
+        # return sum(map(board.__getitem__, indices))
         sum = 0
-        
+
         for s in range(x):
             sum += board[i+s*(self.n-1)]
         return sum
@@ -369,15 +411,16 @@ class Board:
         """
         if sum(self.board) == 0:
             return 1
-        best_value = -1000
+        best_value = -inf
         best_move = -1
         self.depth = self.get_depth()
         for i in range(self.n*self.n):
             new_board = self.board.copy()
             if (self.board[i] == 0) & (self.map[i] == 1):
                 new_board[i] = 10
-                new_value = self.minmax(new_board, self.n, -1000, 1000, False, 1)
-                #print(i, new_value)
+                new_value = self.minmax(
+                    new_board, self.n, -inf, inf, False, 1)
+                print(i, new_value)
                 if new_value > best_value:
 
                     best_value = new_value
@@ -399,32 +442,32 @@ class Board:
         """
         winner_true = self.find_winner(5, 5, board, True)
         if winner_true != 0:
-            return winner_true
+            return winner_true*100000000
 
         if (depth > 1):
             winner_5 = self.find_winner(5, 5, board, False)
             if (winner_5 != 0):
-                return winner_5
-
+                return winner_5*1000000
+            
             winner_4 = self.find_winner(5, 4, board, False)
 
             if (winner_4 != 0):
-                return winner_4
-            
+                return winner_4*10000
+
             winner_3 = self.find_winner(5, 3, board, False)
 
             if (winner_3 != 0):
-                return winner_3
+                return winner_3*100
 
             winner_2 = self.find_winner(5, 2, board, False)
-            
+
             if (winner_2 != 0):
                 return winner_2
 
             return 0
 
         if ai_turn:
-            value = -1000
+            value = -inf
 
             for i in range(n*n):
                 new_board = board.copy()
@@ -439,7 +482,7 @@ class Board:
                     # print("max",i,value)
             return value
         else:
-            value = 1000
+            value = inf
             for i in range(n*n):
                 new_board = board.copy()
                 if (new_board[i] == 0) & (self.map[i] == 1):
