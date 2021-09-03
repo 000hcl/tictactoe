@@ -68,7 +68,7 @@ class Board:
             False if the given spot is not "adjacent" to a placed token.
         """
 
-        if (self.horizontal_check(i, 2, self.map) >= 100) | (self.vertical_check(i, 2, self.map) >= 100) | (self.rd_diagonal_check(i, 2, self.map) >= 100) | (self.map[i] >= 100):
+        if (self.horizontal_check(i, 2, self.map) >= 100) or (self.vertical_check(i, 2, self.map) >= 100) or (self.rd_diagonal_check(i, 2, self.map) >= 100) or (self.map[i] >= 100):
 
             return True
         else:
@@ -245,9 +245,9 @@ class Board:
                     o_value += 1
                 """
                 if (real == False) and (i % self.n <= self.n-x-1):
-                    if (horizontal == value-1) & (board[i] == 0) & (board[i+x] == 0):
+                    if (horizontal == value-1) and (board[i] == 0) and (board[i+x] == 0):
                         x_value += 1
-                    if (horizontal == (value*10)-10) & (board[i] == 0) & (board[i+x] == 0):
+                    if (horizontal == (value*10)-10) and (board[i] == 0) and (board[i+x] == 0):
                         o_value += 1
                 """
                 if not real:
@@ -264,10 +264,10 @@ class Board:
                 elif vertical == value*10 == vertical_in_row:
                     o_value += 1
                 """
-                if (real == False) & (i < self.n*self.n - self.n*(x)):
-                    if (vertical == value-1) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
+                if (real == False) and (i < self.n*self.n - self.n*(x)):
+                    if (vertical == value-1) and (board[i] == 0) and (board[i+(self.n*x)] == 0):
                         x_value += 1
-                    if (vertical == (value*10)-10) & (board[i] == 0) & (board[i+(self.n*x)] == 0):
+                    if (vertical == (value*10)-10) and (board[i] == 0) and (board[i+(self.n*x)] == 0):
                         o_value += 1
                 """
                 if not real:
@@ -276,7 +276,7 @@ class Board:
                     elif vertical == (value - 1)*10:
                         o_value += 0.5
 
-            if (i < self.n*self.n - self.n*(x-1)) & (i % self.n <= self.n-x):
+            if (i < self.n*self.n - self.n*(x-1)) and (i % self.n <= self.n-x):
                 rd_diagonal = self.rd_diagonal_check(i, x, board)
                 rd_diagonal_in_row = self.rd_diagonal_check(i, value, board)
                 if rd_diagonal == value == rd_diagonal_in_row:
@@ -284,10 +284,10 @@ class Board:
                 elif rd_diagonal == value*10 == rd_diagonal_in_row:
                     o_value += 1
                 """
-                if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n <= self.n-x-1):
-                    if (rd_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
+                if (real == False) and (i < self.n*self.n - self.n*(x)) and (i % self.n <= self.n-x-1):
+                    if (rd_diagonal == value-1) and (board[i] == 0) and (board[i+x*(self.n+1)] == 0):
                         x_value += 1
-                    if (rd_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n+1)] == 0):
+                    if (rd_diagonal == 10*value-10) and (board[i] == 0) and (board[i+x*(self.n+1)] == 0):
                         o_value += 1
                 """
 
@@ -297,7 +297,7 @@ class Board:
                     elif rd_diagonal_in_row == (value-1)*10:
                         o_value += 0.5
 
-            if (i < self.n*self.n - self.n*(x-1)) & (i % self.n >= x-1):
+            if (i < self.n*self.n - self.n*(x-1)) and (i % self.n >= x-1):
                 ld_diagonal = self.ld_diagonal_check(i, x, board)
                 ld_diagonal_in_row = self.ld_diagonal_check(i, value, board)
                 if ld_diagonal == value == ld_diagonal_in_row:
@@ -305,11 +305,11 @@ class Board:
                 elif ld_diagonal == value*10 == ld_diagonal_in_row:
                     o_value += 1
                 """
-                if (real == False) & (i < self.n*self.n - self.n*(x)) & (i % self.n >= x):
+                if (real == False) and (i < self.n*self.n - self.n*(x)) and (i % self.n >= x):
 
-                    if (ld_diagonal == value-1) & (board[i] == 0) & (board[i+x*(self.n-1)] == 0):
+                    if (ld_diagonal == value-1) and (board[i] == 0) and (board[i+x*(self.n-1)] == 0):
                         x_value += ld_diagonal
-                    if (ld_diagonal == 10*value-10) & (board[i] == 0) & (board[i+x*(self.n-1) == 0]):
+                    if (ld_diagonal == 10*value-10) and (board[i] == 0) and (board[i+x*(self.n-1) == 0]):
                         o_value += ld_diagonal
                 """
 
@@ -416,7 +416,7 @@ class Board:
         self.depth = self.get_depth()
         for i in range(self.n*self.n):
             new_board = self.board.copy()
-            if (self.board[i] == 0) & (self.map[i] == 1):
+            if (self.board[i] == 0) and (self.map[i] == 1):
                 new_board[i] = 10
                 new_value = self.minmax(
                     new_board, self.n, -inf, inf, False, 1)
@@ -425,7 +425,7 @@ class Board:
 
                     best_value = new_value
                     best_move = i
-                if best_value == 10:
+                if best_value >= 100000000:
                     return best_move
         return best_move
 
@@ -471,7 +471,7 @@ class Board:
 
             for i in range(n*n):
                 new_board = board.copy()
-                if (new_board[i] == 0) & (self.map[i] == 1):
+                if (new_board[i] == 0) and (self.map[i] == 1):
                     new_board[i] = 10
                     value = max(value, self.minmax(
                         new_board, n, a, b, False, depth + 1))
@@ -485,7 +485,7 @@ class Board:
             value = inf
             for i in range(n*n):
                 new_board = board.copy()
-                if (new_board[i] == 0) & (self.map[i] == 1):
+                if (new_board[i] == 0) and (self.map[i] == 1):
                     new_board[i] = 1
                     value = min(value, self.minmax(
                         new_board, n, a, b, True, depth + 1))
