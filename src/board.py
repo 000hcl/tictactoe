@@ -18,13 +18,13 @@ class Board:
             map = Determines which spots on the board are significant to the game.
             turn = turn of the game.
             x = the amount of symbols that are needed to get in a row to win the game.
+            player_starts = True if the player starts the game.
         """
-        self.n = n
+        self.n = 30
         self.board = self.__new_board(self.n)
-        self.map = self.__new_board(self.n)
+        self.board_map = self.__new_board(self.n)
         self.min_index = inf
         self.max_index = -1
-        self.turn = 1
         self.player_starts = True
         self.x = 5
 
@@ -36,14 +36,14 @@ class Board:
             if ((i+1) % self.n != 0):
                 scan = self.scan(i)
                 if scan:
-                    if self.map[i] == 0:
-                        self.map[i] = 1
-                    if self.map[i+1] == 0:
-                        self.map[i+1] = 1
-                    if self.map[i+self.n] == 0:
-                        self.map[i+self.n] = 1
-                    if self.map[i+self.n+1] == 0:
-                        self.map[i+self.n+1] = 1
+                    if self.board_map[i] == 0:
+                        self.board_map[i] = 1
+                    if self.board_map[i+1] == 0:
+                        self.board_map[i+1] = 1
+                    if self.board_map[i+self.n] == 0:
+                        self.board_map[i+self.n] = 1
+                    if self.board_map[i+self.n+1] == 0:
+                        self.board_map[i+self.n+1] = 1
 
 
     def scan(self, i):
@@ -58,7 +58,7 @@ class Board:
             False if the given spot is not "adjacent" to a placed token.
         """
 
-        if (self.horizontal_check(i, 2, self.map) >= 100) or (self.vertical_check(i, 2, self.map) >= 100) or (self.rd_diagonal_check(i, 2, self.map) >= 100) or (self.map[i] >= 100):
+        if (self.horizontal_check(i, 2, self.board_map) >= 100) or (self.vertical_check(i, 2, self.board_map) >= 100) or (self.rd_diagonal_check(i, 2, self.board_map) >= 100) or (self.board_map[i] >= 100):
             return True
         else:
             return False
@@ -78,10 +78,8 @@ class Board:
         """
         Places the player's token on the board by asking for input.
         """
-        move = ui.request_move(0, self.n*self.n-1)
-        if move == -1:
-            return
-        self.map[move] = 100
+        move = ui.request_move(0, self.n*self.n-1, self.board)
+        self.board_map[move] = 100
         self.board[move] = 1
         self.set_max_min_indices(move)
 
@@ -98,59 +96,60 @@ class Board:
         """
         Assesses which move is best for the AI to take and places the AI's token on the board.
         """
-        if sum(self.map) == 0:
+        if sum(self.board_map) == 0:
             move = 404
         else:
             move = self.ai_best_move()
         self.board[move] = 10
-        self.map[move] = 100
+        self.board_map[move] = 100
         self.set_max_min_indices(move)
         print("AI moves to", move)
 
     def end(self):
         """
-        Checks if the game has ended and exits if it has.
+        Checks if the game has ended and prints the appropriate message.
         """
         winner = self.check_winner(self.x, self.board)
         if winner != 0:
             if winner > 0:
-                w = "AI"
+                winner_text = "AI"
             else:
-                w = "player"
-            print("WINNER:", w)
-            exit()
-        if self.check_tie(self.board):
-            print("GAME ENDED IN TIE")
-            print(self.board)
-            exit()
+                winner_text = "player"
+            ui.winner_message(winner_text)
+            return True
 
-    def start_game(self):
+        if self.check_tie(self.board):
+            ui.tie_message()
+            return True
+        return False
+
+    def start_game_AI_start(self):
         """
         Starts the game.
         """
         self.player_starts = False
         while True:
 
-            self.turn += 1
             self.ai_move()
             ui.print_board(self.board, self.n)
-            self.end()
+            if self.end():
+                break
             self.remap()
             self.player_move()
             self.end()
             self.remap()
 
-    def start_game_alt(self):
+    def start_game_player_start(self):
         """
         Starts the game, player starts.
         """
         while True:
 
-            self.turn += 1
             ui.print_board(self.board, self.n)
             self.player_move()
             self.remap()
-            self.end()
+            if self.end():
+                break
             self.ai_move()
             self.remap()
             self.end()
@@ -169,21 +168,22 @@ class Board:
         """
         Checks if someone has won the game, returns the winner.
         Returns:
-            1: If the player has won.
-            10: If the AI has won.
-            None: If there is no winner.
+            An integer < 0: If the player has won.
+            An integer > 0: If the AI has won.
+            0: If there is no winner.
         """
-        return self.find_winner(x, x, board, True)
+        return self.find_board_score(x, x, board, True)
 
-    def find_winner(self, x, value, board, real):
+    def find_board_score(self, x, value, board, real):
         """
-        Checks if there is a "winner" on the board.
+        Finds "value" amounts of tokens in rows of x.
 
         Args:
             x = the "range"
             value = The desired amount of matches in a range.
                 (example: x=5, value=4 means 4 tokens in a line
-                 with the length of 5 is a "win")
+                 with the length of 5 increases the score for
+                 the owner of the tokens.)
             board = the board to inspect
             real = 
                 True if a game ending win is desired
@@ -271,15 +271,11 @@ class Board:
             x = length of line
             board = the board to inspect
 
-        Retrns: sum of the given line
+        Returns: sum of the given line
 
         """
-        #indices = range(i, self.n*x, self.n)
-        # return sum(map(board.__getitem__, indices))
-        sum = 0
-        for s in range(x):
-            sum += board[i+(s*self.n)]
-        return sum
+        indices = range(i, i+(self.n*x), self.n)
+        return sum(map(board.__getitem__, indices))
 
     def horizontal_check(self, i, x, board):
         """
@@ -307,13 +303,9 @@ class Board:
         Returns: sum of the given diagonal
         """
 
-        #indices = range(i,x*self.n,self.n+1)
-        # return sum(map(board.__getitem__, indices))
+        indices = range(i,i+x*self.n,self.n+1)
+        return sum(map(board.__getitem__, indices))
 
-        sum = 0
-        for s in range(x):
-            sum += board[i+s*(self.n+1)]
-        return sum
 
     def ld_diagonal_check(self, i, x, board):
         """
@@ -326,37 +318,8 @@ class Board:
 
         Returns: sum of the given diagonal
         """
-        #indices = range(i,x*self.n,self.n-1)
-        # return sum(map(board.__getitem__, indices))
-        sum = 0
-
-        for s in range(x):
-            sum += board[i+s*(self.n-1)]
-        return sum
-
-    def ai_best_move(self):
-        """
-        Finds the best move for the AI.
-        Returns: The best move to make for the AI.
-        """
-        if sum(self.board) == 0:
-            return 1
-        best_value = -inf
-        best_move = -1
-        for i in range(self.n*self.n):
-            new_board = self.board.copy()
-            if (self.board[i] == 0) and (self.map[i] == 1):
-                new_board[i] = 10
-                new_value = self.minmax(
-                    new_board, self.n, -inf, inf, False, 1)
-                print(i, new_value)
-                if new_value > best_value:
-
-                    best_value = new_value
-                    best_move = i
-                if best_value >= 100000000:
-                    return best_move
-        return best_move
+        indices = range(i,i+(x-1)*self.n,self.n-1)
+        return sum(map(board.__getitem__, indices))
 
     def minmax(self, board, n, a, b, ai_turn, depth):
         """
@@ -368,27 +331,30 @@ class Board:
             b: beta used in alpha-beta pruning
             ai_turn: True if it's the AI's turn.
             depth: current depth of the game tree
+        
+        Returns: 
+            The result of the minmax algorithm.
         """
-        winner_true = self.find_winner(5, 5, board, True)
+        winner_true = self.find_board_score(5, 5, board, True)
         if winner_true != 0:
             return winner_true*100000000
 
         if (depth > 1):
-            winner_5 = self.find_winner(5, 5, board, False)
+            winner_5 = self.find_board_score(5, 5, board, False)
             if (winner_5 != 0):
                 return winner_5*1000000
 
-            winner_4 = self.find_winner(5, 4, board, False)
+            winner_4 = self.find_board_score(5, 4, board, False)
 
             if (winner_4 != 0):
                 return winner_4*10000
 
-            winner_3 = self.find_winner(5, 3, board, False)
+            winner_3 = self.find_board_score(5, 3, board, False)
 
             if (winner_3 != 0):
                 return winner_3*100
 
-            winner_2 = self.find_winner(5, 2, board, False)
+            winner_2 = self.find_board_score(5, 2, board, False)
 
             if (winner_2 != 0):
                 return winner_2
@@ -400,7 +366,7 @@ class Board:
 
             for i in range(n*n):
                 new_board = board.copy()
-                if (new_board[i] == 0) and (self.map[i] == 1):
+                if (new_board[i] == 0) and (self.board_map[i] == 1):
                     new_board[i] = 10
                     value = max(value, self.minmax(
                         new_board, n, a, b, False, depth + 1))
@@ -413,7 +379,7 @@ class Board:
             value = inf
             for i in range(n*n):
                 new_board = board.copy()
-                if (new_board[i] == 0) and (self.map[i] == 1):
+                if (new_board[i] == 0) and (self.board_map[i] == 1):
                     new_board[i] = 1
                     value = min(value, self.minmax(
                         new_board, n, a, b, True, depth + 1))
@@ -421,3 +387,26 @@ class Board:
                         break
                     b = min(b, value)
             return value
+
+    def ai_best_move(self):
+        """
+        Finds the best move for the AI.
+        Returns: The best move to make for the AI.
+        """
+        if sum(self.board) == 0:
+            return 1
+        best_value = -inf
+        best_move = -1
+        for i in range(self.n*self.n):
+            new_board = self.board.copy()
+            if (self.board[i] == 0) and (self.board_map[i] == 1):
+                new_board[i] = 10
+                new_value = self.minmax(
+                    new_board, self.n, -inf, inf, False, 1)
+                if new_value > best_value:
+
+                    best_value = new_value
+                    best_move = i
+                if best_value >= 100000000:
+                    return best_move
+        return best_move
