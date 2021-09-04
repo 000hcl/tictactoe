@@ -45,17 +45,6 @@ class Board:
                     if self.map[i+self.n+1] == 0:
                         self.map[i+self.n+1] = 1
 
-    def get_depth(self):
-        """
-        Finds the max depth of the game tree.
-
-        Returns: the depth of the tree.
-        """
-        sum = 0
-        for x in self.map:
-            if x == 1:
-                sum += 1
-        return sum
 
     def scan(self, i):
         """
@@ -109,7 +98,6 @@ class Board:
         """
         Assesses which move is best for the AI to take and places the AI's token on the board.
         """
-        depth = self.get_depth()
         if sum(self.map) == 0:
             move = 404
         else:
@@ -355,7 +343,6 @@ class Board:
             return 1
         best_value = -inf
         best_move = -1
-        self.depth = self.get_depth()
         for i in range(self.n*self.n):
             new_board = self.board.copy()
             if (self.board[i] == 0) and (self.map[i] == 1):
