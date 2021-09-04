@@ -136,7 +136,8 @@ class Board:
                 break
             self.remap()
             self.player_move()
-            self.end()
+            if self.end():
+                break
             self.remap()
 
     def start_game_player_start(self):
@@ -151,8 +152,9 @@ class Board:
             if self.end():
                 break
             self.ai_move()
+            if self.end():
+                break
             self.remap()
-            self.end()
 
     def check_tie(self, board):
         """
@@ -250,12 +252,12 @@ class Board:
                         o_value += 0.5
 
         if self.player_starts:
-            if x_value >= o_value:
+            if x_value > o_value:
                 return - x_value
             if o_value >= 1:
                 return o_value
         else:
-            if o_value >= x_value:
+            if o_value > x_value:
                 return o_value
             if x_value >= 1:
                 return - x_value
