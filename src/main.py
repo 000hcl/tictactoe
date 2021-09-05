@@ -1,4 +1,7 @@
-import ui
+import ui.menu_ui as x
 
-ui.menu()
+def start():
+    x.menu()
 
+if __name__ == "__main__":
+    start()

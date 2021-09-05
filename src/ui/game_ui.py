@@ -1,5 +1,5 @@
+from .tools import attempt_int_conversion
 
-import board
 
 def request_move(minimum, maximum, board):
     """
@@ -18,27 +18,6 @@ def request_move(minimum, maximum, board):
             print("This square is taken. Please try another one.")
             return request_move(minimum, maximum, board)
         return converted
-
-def attempt_int_conversion(number, minimum, maximum):
-    """
-    Checks if the input is can be converted into an integer between "minimum" and "maximum".
-
-    Args:
-        number: the input to be converted
-        minimum: the minimum allowed value
-        maximum: the maximum allowed value
-
-    Returns:
-        an integer if the conversion is successful
-    """
-    try:
-        integer = int(number)
-        if maximum >= integer >= minimum:
-            return integer
-        else:
-            print("Invalid number. Please retry.")
-    except:
-        print("Invalid number. Please retry.")
 
 def print_board(board, n):
     """
@@ -62,24 +41,6 @@ def print_board(board, n):
             print(string)
             string = ""
 
-def menu():
-    """
-    Main menu loop.
-    """
-    while True:
-        print("1: start a game where the player starts.")
-        print("2: start a game where the AI starts.")
-        print("0: Exit program.")
-        raw = input("Your input: ")
-        converted = attempt_int_conversion(raw, 0, 2)
-        if converted == 1:
-            game = board.Board(30)
-            game.start_game_player_start()
-        elif converted == 2:
-            game = board.Board(30)
-            game.start_game_AI_start()
-        elif converted == 0:
-            exit()
 
 def winner_message(winner):
     """

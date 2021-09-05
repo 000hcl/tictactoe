@@ -1,6 +1,5 @@
-
 from math import inf
-import ui
+import ui.game_ui as x
 
 
 class Board:
@@ -78,7 +77,7 @@ class Board:
         """
         Places the player's token on the board by asking for input.
         """
-        move = ui.request_move(0, self.n*self.n-1, self.board)
+        move = x.request_move(0, self.n*self.n-1, self.board)
         self.board_map[move] = 100
         self.board[move] = 1
         self.set_max_min_indices(move)
@@ -115,11 +114,11 @@ class Board:
                 winner_text = "AI"
             else:
                 winner_text = "player"
-            ui.winner_message(winner_text)
+            x.winner_message(winner_text)
             return True
 
         if self.check_tie(self.board):
-            ui.tie_message()
+            x.tie_message()
             return True
         return False
 
@@ -131,7 +130,7 @@ class Board:
         while True:
 
             self.ai_move()
-            ui.print_board(self.board, self.n)
+            x.print_board(self.board, self.n)
             if self.end():
                 break
             self.remap()
@@ -146,7 +145,7 @@ class Board:
         """
         while True:
 
-            ui.print_board(self.board, self.n)
+            x.print_board(self.board, self.n)
             self.player_move()
             self.remap()
             if self.end():
