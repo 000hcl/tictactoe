@@ -1,4 +1,4 @@
-from game import board
+from ..game import board
 from .tools import attempt_int_conversion
 
 def menu():

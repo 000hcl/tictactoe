@@ -1,5 +1,5 @@
 from math import inf
-import ui.game_ui as x
+from ..ui import game_ui as x
 
 
 class Board:

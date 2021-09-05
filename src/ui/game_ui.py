@@ -1,4 +1,4 @@
-from .tools import attempt_int_conversion
+import src.ui.tools as tool
 
 
 def request_move(minimum, maximum, board):
@@ -10,7 +10,7 @@ def request_move(minimum, maximum, board):
         maximum: The maximum allowed value.
     """
     raw = input("Your move: ")
-    converted = attempt_int_conversion(raw, minimum, maximum)
+    converted = tool.attempt_int_conversion(raw, minimum, maximum)
     if not converted:
         return request_move(minimum, maximum, board)
     else:
