@@ -4,6 +4,13 @@
 
 [Project Specification](https://github.com/000hcl/tictactoe/blob/main/documentation/project_specification.md)
 
+[instructions](https://github.com/000hcl/tictactoe/blob/main/documentation/user_guide.md)
+
+[implementation](https://github.com/000hcl/tictactoe/blob/main/documentation/implementation.md)
+
+[testing](https://github.com/000hcl/tictactoe/blob/main/documentation/testing.md)
+
+
 ## Weekly reports:
 [week1](https://github.com/000hcl/tictactoe/blob/main/documentation/weekly_reports/week1.md)
 
