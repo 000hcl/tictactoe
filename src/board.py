@@ -1,5 +1,6 @@
 from math import inf
 import src.game_ui as x
+import time
 
 
 class Board:
@@ -95,6 +96,7 @@ class Board:
         """
         Assesses which move is best for the AI to take and places the AI's token on the board.
         """
+        time_start = time.time()
         if sum(self.board_map) == 0:
             move = 404
         else:
@@ -102,7 +104,11 @@ class Board:
         self.board[move] = 10
         self.board_map[move] = 100
         self.set_max_min_indices(move)
-        print("AI moves to", move)
+        time_stop = time.time()
+        time_difference = time_stop - time_start
+        print("Time taken: ",time_difference)
+
+
 
     def end(self):
         """

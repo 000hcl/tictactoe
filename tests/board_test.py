@@ -8,7 +8,7 @@ class TestBoard(unittest.TestCase):
         self.big_board = b.Board(30)
 
     def test_board_is_correct_size(self):
-        self.assertEqual(9, len(self.board.board))
+        self.assertEqual(90, len(self.big_board.board))
 
     def test_check_tie_returns_true_when_board_is_full(self):
         board = ["X", "X", "O",
