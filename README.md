@@ -1,5 +1,7 @@
 # 5 in a row tic-tac-toe
 
+[Final release](https://github.com/000hcl/tictactoe/releases/tag/final)
+
 ## Documentation
 
 [Project Specification](https://github.com/000hcl/tictactoe/blob/main/documentation/project_specification.md)
