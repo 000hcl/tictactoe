@@ -43,7 +43,7 @@ poetry run invoke start
 ```
 ---
 
-Testing: (CURRENTLY MOST WILL FAIL)
+Testing (does not work): 
 ```bash
 poetry run invoke test
 ```
