@@ -1,5 +1,5 @@
-from ..game import board
-from .tools import attempt_int_conversion
+import src.board as board
+from src.tools import attempt_int_conversion
 
 def menu():
     """

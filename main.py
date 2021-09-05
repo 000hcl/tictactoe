@@ -1,4 +1,4 @@
-from ui import menu_ui as x
+import src.menu_ui as x
 
 def start():
     x.menu()

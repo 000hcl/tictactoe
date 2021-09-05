@@ -1,4 +1,4 @@
-import src.ui.tools as tool
+import src.tools as tool
 
 
 def request_move(minimum, maximum, board):

@@ -10,7 +10,7 @@ def format(ctx):
 
 @task
 def test(ctx):
-    ctx.run("pytest src")
+    ctx.run("pytest tests")
 
 @task
 def coverage(ctx):
@@ -22,4 +22,4 @@ def coverage_report(ctx):
 
 @task
 def start(ctx):
-    ctx.run("python3 src/main.py")
+    ctx.run("python3 main.py")
